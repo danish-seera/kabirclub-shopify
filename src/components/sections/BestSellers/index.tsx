@@ -16,7 +16,7 @@ export type Collection = (typeof collections)[number];
 const BestSellers = () => {
   const [activeCollection, setActiveCollection] = useState<Collection>('clothing');
   return (
-    <section className="flex w-full flex-col items-center justify-center gap-[24px] pb-[32px] pt-[24px] md:gap-[48px] md:pb-[64px] md:pt-[48px]">
+    <section className="flex w-full flex-col items-center justify-center bg-black gap-[24px] pb-[32px] pt-[24px] md:gap-[48px] md:pb-[64px] md:pt-[48px]">
       <div className="flex w-full max-w-[95%] flex-col items-center justify-center gap-2 font-lora font-medium text-veryDarkPurple md:w-[904px] md:flex-row md:justify-between md:gap-0">
         <h2 className="text-[clamp(28px,20px_+_2vw,40px)]">Best Sellers</h2>
         <div className="flex gap-4 text-[clamp(20px,10px_+_2vw,26px)] md:gap-8">

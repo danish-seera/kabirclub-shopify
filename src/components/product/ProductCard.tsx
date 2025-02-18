@@ -162,7 +162,7 @@ const ProductCard = ({
           </h3>
         </a>
         <p className="font-lora text-[clamp(20px,8px_+_2vw,24px)] text-darkPurple">
-          {Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(
+          {Intl.NumberFormat('en-US', { style: 'currency', currency: 'INR' }).format(
             Number(product.priceRange.minVariantPrice.amount)
           )}
         </p>

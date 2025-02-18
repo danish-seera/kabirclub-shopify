@@ -1,5 +1,8 @@
 const plugin = require('tailwindcss/plugin');
-
+/** #fdc466 
+ * #684a20
+ * #302216
+*/
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/app/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
@@ -9,11 +12,11 @@ module.exports = {
         xs: '480px'
       },
       colors: {
-        veryDarkPurple: '#2e2e38',
-        darkPurple: '#5c5c70',
-        purple: '#9d9cc9',
-        lightPurple: '#dedeed',
-        veryLightPurple: '#eeeefe'
+        veryDarkPurple: '#ffffff',
+        darkPurple: '#ffffff',
+        purple: '#fdc466',
+        lightPurple: '#fdc466',
+        veryLightPurple: '#ffffff'
       },
       fontFamily: {
         sans: ['var(--font-geist-sans)'],

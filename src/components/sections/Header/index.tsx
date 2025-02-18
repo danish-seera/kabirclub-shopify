@@ -16,7 +16,7 @@ import SearchIcon from './SearchIcon';
 const Header = async () => {
   const menu = await getMenu('main-menu');
   return (
-    <header className="flex w-full items-center justify-center border-b border-purple bg-black/80 px-[8px] py-[4px] md:h-[80px] md:py-0 xl:px-[48px]">
+    <header className="flex w-full items-center justify-center border-b border-purple bg-black px-[8px] py-[4px] md:h-[80px] md:py-0 xl:px-[48px]">
       <h1 className="sr-only">KabirClub</h1>
       <nav className="flex h-full w-full max-w-full items-center justify-between md:w-[1440px]">
         <h2 className="sr-only">Main Navigation Menu</h2>
