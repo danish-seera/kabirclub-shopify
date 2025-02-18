@@ -26,18 +26,18 @@ const AboutUs = dynamic(() => import('@/components/sections/AboutUs'), {
 export const runtime = 'edge';
 
 export const metadata = {
-  description: 'Clothing store e-commerce website by Rashid Shamloo',
-  keywords: ['rumusha', 'clothing', 'store', 'clothing store', 'e-commerce', 'rashid shamloo'],
+  description: 'Clothing store e-commerce website by Kabirclub',
+  keywords: ['Kabirclub', 'clothing', 'store', 'clothing store', 'e-commerce', 'mohd danish'],
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    title: 'Rumusha',
-    siteName: 'Rumusha',
-    description: 'Clothing store e-commerce website by Rashid Shamloo',
+    title: 'Kabirclub',
+    siteName: 'Kabirclub',
+    description: 'Kabirclub Clothing store e-commerce website by Kabirclub',
     images: {
       url: '/images/screenshots/home.webp',
-      alt: 'Rumusha by Rashid Shamloo',
+      alt: 'Kabirclub',
       width: 1200,
       height: 660,
       type: 'image/webp',

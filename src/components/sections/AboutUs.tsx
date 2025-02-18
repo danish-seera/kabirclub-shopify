@@ -4,7 +4,7 @@ const AboutUs = () => {
       <h2 className="sr-only">About us</h2>
       <div className="flex max-w-[95%] flex-col items-center justify-center gap-[32px] text-center md:max-w-[700px]">
         <h3 className="font-lora text-[clamp(28px,18px_+_2vw,40px)] font-semibold text-veryDarkPurple">
-          Perfect blend of Japanese and Western fashion
+          Perfect blend of Indian and Western fashion
         </h3>
         <p className="max-w-[90%] font-lora text-[clamp(20px,14px_+_2vw,24px)] font-medium leading-relaxed text-darkPurple md:max-w-none md:leading-normal">
           We strive to create pieces that are both unique and timeless and take pride in offering
