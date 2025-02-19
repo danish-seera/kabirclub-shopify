@@ -19,7 +19,7 @@ import RecommendedItems from '@/components/product/RecommendedItems';
 // types
 // import { Image } from '@/lib/shopify/types';
 
-// export const runtime = 'edge';
+export const runtime = 'edge';
 
 export async function generateMetadata({
   params
@@ -44,18 +44,18 @@ export async function generateMetadata({
         follow: indexable
       }
     },
-    openGraph: url
-      ? {
-          images: [
-            {
-              url,
-              width,
-              height,
-              alt
-            }
-          ]
-        }
-      : null
+    // openGraph: url
+    //   ? {
+    //       images: [
+    //         {
+    //           url,
+    //           width,
+    //           height,
+    //           alt
+    //         }
+    //       ]
+    //     }
+    //   : null
   };
 }
 
