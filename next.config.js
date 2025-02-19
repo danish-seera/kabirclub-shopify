@@ -23,5 +23,8 @@ module.exports = {
         permanent: true
       }
     ];
+  },
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
   }
 };
