@@ -57,7 +57,7 @@ const ProductDescription = ({ product }: { product: Product }) => {
         {product.title}
       </h2>
       <p className="text-[32px]">
-        {Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(price))}
+        {Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'INR' }).format(Number(price))}
       </p>
       <div className="h-[1px] w-full bg-purple"></div>
       <VariantSelector options={product.options} combinations={combinations} />
