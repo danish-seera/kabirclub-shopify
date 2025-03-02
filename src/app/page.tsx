@@ -26,7 +26,7 @@ const AboutUs = dynamic(() => import('@/components/sections/AboutUs'), {
 export const runtime = 'edge';
 
 export const metadata = {
-  description: 'Clothing store e-commerce website by Kabirclub',
+  description: 'Kabirclub',
   keywords: ['Kabirclub', 'clothing', 'store', 'clothing store', 'e-commerce', 'mohd danish'],
   // openGraph: {
   //   type: 'website',
