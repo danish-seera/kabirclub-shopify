@@ -124,7 +124,7 @@ export default function AboutUsPage() {
                   src="/images/about/shirts.jpg" 
                   alt="Shirts collection" 
                   fill 
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105 -rotate-90"
                 />
               </div>
               <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6">
@@ -147,7 +147,7 @@ export default function AboutUsPage() {
                   src="/images/about/tshirts.jpg" 
                   alt="T-shirts collection" 
                   fill 
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105 rotate-90"
                 />
               </div>
               <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6">
