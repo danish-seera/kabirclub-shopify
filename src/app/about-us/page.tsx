@@ -1,16 +1,8 @@
-import ImageWithFallback from '@/components/common/ImageWithFallback';
+import Image from 'next/image';
 
 export const metadata = {
   title: 'About Us | Kabirclub',
   description: 'Discover the story behind Kabirclub - your premium destination for men\'s fashion.'
-};
-
-// Fallback images for when actual images are not available
-const FALLBACK_IMAGES = {
-  founder: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 800 800"%3E%3Crect fill="%23000000" width="800" height="800"/%3E%3Cg fill="%23daa520" fill-opacity="0.4"%3E%3Ccircle cx="400" cy="400" r="200"/%3E%3Ccircle cx="400" cy="300" r="100"/%3E%3C/g%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="40" fill="%23daa520"%3EKabirclub%3C/text%3E%3C/svg%3E',
-  shirts: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 800 1000"%3E%3Crect fill="%23000000" width="800" height="1000"/%3E%3Cg fill="%23daa520" fill-opacity="0.3"%3E%3Cpath d="M400 300 L500 400 L500 700 L300 700 L300 400 Z"/%3E%3C/g%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="40" fill="%23daa520"%3EShirts%3C/text%3E%3C/svg%3E',
-  tshirts: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 800 1000"%3E%3Crect fill="%23000000" width="800" height="1000"/%3E%3Cg fill="%23daa520" fill-opacity="0.3"%3E%3Cpath d="M400 300 L500 350 L500 700 L300 700 L300 350 Z"/%3E%3C/g%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="40" fill="%23daa520"%3ET-Shirts%3C/text%3E%3C/svg%3E',
-  jeans: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%25" height="100%25" viewBox="0 0 800 1000"%3E%3Crect fill="%23000000" width="800" height="1000"/%3E%3Cg fill="%23daa520" fill-opacity="0.3"%3E%3Cpath d="M400 300 L450 300 L500 700 L400 700 L350 700 L300 300 Z"/%3E%3C/g%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="40" fill="%23daa520"%3EJeans%3C/text%3E%3C/svg%3E'
 };
 
 export default function AboutUsPage() {
@@ -48,16 +40,15 @@ export default function AboutUsPage() {
               
               <div className="order-1 md:order-2">
                 <div className="relative h-72 w-full overflow-hidden rounded-lg border border-[#daa520]/20 md:h-96">
-                  <ImageWithFallback
+                  <Image 
                     src="/images/about/founder.jpg" 
-                    fallbackSrc={FALLBACK_IMAGES.founder}
                     alt="Kabirclub founder" 
                     fill 
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 max-w-[80%] rounded border-l-2 border-[#daa520] bg-black/30 p-3 backdrop-blur-sm">
-                    <p className="text-sm font-medium text-[#daa520]">Our founder working with local artisans</p>
+                    <p className="text-sm font-medium text-[#daa520]">Founder</p>
                   </div>
                 </div>
               </div>
@@ -129,9 +120,8 @@ export default function AboutUsPage() {
             <div className="group relative overflow-hidden rounded-lg">
               <div className="aspect-[4/5] w-full overflow-hidden">
                 <div className="absolute inset-0 bg-black/30 transition-opacity duration-300 group-hover:bg-black/10"></div>
-                <ImageWithFallback 
+                <Image 
                   src="/images/about/shirts.jpg" 
-                  fallbackSrc={FALLBACK_IMAGES.shirts}
                   alt="Shirts collection" 
                   fill 
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -153,9 +143,8 @@ export default function AboutUsPage() {
             <div className="group relative overflow-hidden rounded-lg">
               <div className="aspect-[4/5] w-full overflow-hidden">
                 <div className="absolute inset-0 bg-black/30 transition-opacity duration-300 group-hover:bg-black/10"></div>
-                <ImageWithFallback 
+                <Image 
                   src="/images/about/tshirts.jpg" 
-                  fallbackSrc={FALLBACK_IMAGES.tshirts}
                   alt="T-shirts collection" 
                   fill 
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -177,9 +166,8 @@ export default function AboutUsPage() {
             <div className="group relative overflow-hidden rounded-lg">
               <div className="aspect-[4/5] w-full overflow-hidden">
                 <div className="absolute inset-0 bg-black/30 transition-opacity duration-300 group-hover:bg-black/10"></div>
-                <ImageWithFallback 
+                <Image 
                   src="/images/about/jeans.jpg" 
-                  fallbackSrc={FALLBACK_IMAGES.jeans}
                   alt="Jeans collection" 
                   fill 
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
