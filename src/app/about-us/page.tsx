@@ -44,6 +44,7 @@ export default function AboutUsPage() {
                     src="/images/about/founder.jpg" 
                     alt="Kabirclub founder" 
                     fill 
+                    sizes="(min-width: 768px) 40vw, 90vw"
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
@@ -118,13 +119,14 @@ export default function AboutUsPage() {
           <div className="grid gap-6 md:grid-cols-3">
             {/* Product Category 1 */}
             <div className="group relative overflow-hidden rounded-lg">
-              <div className="aspect-[4/5] w-full overflow-hidden">
+              <div className="aspect-[4/5] w-full overflow-hidden" style={{position: 'relative'}}>
                 <div className="absolute inset-0 bg-black/30 transition-opacity duration-300 group-hover:bg-black/10"></div>
                 <Image 
                   src="/images/about/shirts.jpg" 
                   alt="Shirts collection" 
                   fill 
-                  className="object-cover transition-transform duration-500 group-hover:scale-105 -rotate-90"
+                  sizes="(min-width: 768px) 30vw, 90vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
               <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6">
@@ -141,13 +143,14 @@ export default function AboutUsPage() {
             
             {/* Product Category 2 */}
             <div className="group relative overflow-hidden rounded-lg">
-              <div className="aspect-[4/5] w-full overflow-hidden">
+              <div className="aspect-[4/5] w-full overflow-hidden" style={{position: 'relative'}}>
                 <div className="absolute inset-0 bg-black/30 transition-opacity duration-300 group-hover:bg-black/10"></div>
                 <Image 
                   src="/images/about/tshirts.jpg" 
                   alt="T-shirts collection" 
                   fill 
-                  className="object-cover transition-transform duration-500 group-hover:scale-105 rotate-90"
+                  sizes="(min-width: 768px) 30vw, 90vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
               <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6">
@@ -164,12 +167,13 @@ export default function AboutUsPage() {
             
             {/* Product Category 3 */}
             <div className="group relative overflow-hidden rounded-lg">
-              <div className="aspect-[4/5] w-full overflow-hidden">
+              <div className="aspect-[4/5] w-full overflow-hidden" style={{position: 'relative'}}>
                 <div className="absolute inset-0 bg-black/30 transition-opacity duration-300 group-hover:bg-black/10"></div>
                 <Image 
                   src="/images/about/jeans.jpg" 
                   alt="Jeans collection" 
                   fill 
+                  sizes="(min-width: 768px) 30vw, 90vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
