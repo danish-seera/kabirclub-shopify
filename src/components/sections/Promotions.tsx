@@ -31,12 +31,12 @@ const Promotions = () => {
         </div>
         <div className="absolute right-[5%] top-[50%] flex w-[65%] max-w-[610px] flex-col items-center justify-center gap-[16px] rounded-[16px] bg-white/30 p-[16px] text-center -translate-y-1/2 md:gap-[32px] md:p-[32px]">
           <h3 className="font-lora text-[clamp(24px,14px_+_2vw,60px)] font-bold leading-[1.5] text-white drop-shadow-md">
-            Stay Warm,
+            Stay Cool
             <br />
             Stay Stylish
           </h3>
           <p className="text-[clamp(18px,10px_+_2vw,32px)] font-semibold text-veryDarkPurple drop-shadow-md">
-            Stay cozy and fashionable this winter with our winter collection!
+            Stay fashionable this summer with our summer collection!
           </p>
           <a className="btn text-[clamp(16px,8px_+_2vw,22px)]" href="/search/winter-2024">
             View Collection
