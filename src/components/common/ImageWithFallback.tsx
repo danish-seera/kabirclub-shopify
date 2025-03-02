@@ -1,9 +1,21 @@
 'use client';
 
+import type { ImageProps } from 'next/image';
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function ImageWithFallback({ src, fallbackSrc, alt, ...props }) {
+interface ImageWithFallbackProps extends Omit<ImageProps, 'src'> {
+  src: string;
+  fallbackSrc: string;
+  alt: string;
+}
+
+export default function ImageWithFallback({
+  src,
+  fallbackSrc,
+  alt,
+  ...props
+}: ImageWithFallbackProps) {
   const [imgSrc, setImgSrc] = useState(src);
 
   return (
