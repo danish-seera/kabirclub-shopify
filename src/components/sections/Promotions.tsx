@@ -2,24 +2,47 @@
 
 // next
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 // react-scroll-parallax
 import { Parallax, ParallaxProvider } from 'react-scroll-parallax';
 
 const Promotions = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check if we're on the client side and update based on screen size
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px is standard tablet breakpoint
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Update on resize
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
   return (
     <ParallaxProvider>
       <div className="relative h-[570px] overflow-hidden sm:h-screen">
         <h2 className="sr-only">Promotions</h2>
+        
+        {/* Desktop image with parallax effect */}
         <Parallax speed={-50} className="relative hidden h-full w-full sm:block">
           <Image
-            src="/images/promotions/winter.jpg"
+            src="/images/promotions/winter-1.jpg" 
             alt="winter collection"
             fill
             sizes="(min-width: 768px) 100vw, 867px"
             className="object-cover brightness-[0.85]"
           />
         </Parallax>
+        
+        {/* Mobile image without parallax */}
         <div className="relative block h-full w-full sm:hidden">
           <Image
             src="/images/promotions/winter.jpg"
@@ -29,6 +52,7 @@ const Promotions = () => {
             className="object-cover brightness-[0.85]"
           />
         </div>
+        
         <div className="absolute right-[5%] top-[50%] flex w-[65%] max-w-[610px] flex-col items-center justify-center gap-[16px] rounded-[16px] bg-black/40 p-[16px] text-center -translate-y-1/2 md:gap-[32px] md:p-[32px] border border-[#daa520]">
           <h3 className="font-lora text-[clamp(24px,14px_+_2vw,60px)] font-bold leading-[1.5] text-[#daa520] drop-shadow-md">
             Summer Elegance
