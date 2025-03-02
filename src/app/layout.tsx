@@ -56,7 +56,10 @@ export const metadata = {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${quicksand.variable} ${lora.variable} ${quicksand.className}`}>
-      <body className="bg-white text-veryDarkPurple">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      </head>
+      <body className="bg-white text-veryDarkPurple overflow-x-hidden">
         <Header />
         <Suspense>
           <main>{children}</main>

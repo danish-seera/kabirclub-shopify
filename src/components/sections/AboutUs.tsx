@@ -1,6 +1,6 @@
 const AboutUs = () => {
   return (
-    <section className="relative bg-black py-16 md:py-24">
+    <section className="relative bg-black py-16 md:py-24 w-full overflow-hidden">
       <h2 className="sr-only">About us</h2>
       
       {/* Decorative elements */}

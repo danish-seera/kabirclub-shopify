@@ -5,7 +5,7 @@ import SocialMedia from './SocialMedia';
 
 const index = () => {
   return (
-    <footer className="bg-black text-white border-t border-[#daa520]/30">
+    <footer className="bg-black text-white border-t border-[#daa520]/30 w-full overflow-hidden">
       <h2 className="sr-only">Footer</h2>
       
       {/* Top decorative border */}
