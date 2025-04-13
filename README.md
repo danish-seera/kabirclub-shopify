@@ -80,12 +80,3 @@ There are more features that I would like to add in the future like a blog, wish
   <a href="/screenshots/screenshot-desktop-product.png"><img align="top" src="/screenshots/screenshot-desktop-product.png" alt="Desktop Screenshot - Product Page" width="312px"/></a>
   <a href="/screenshots/screenshot-mobile-product.png"><img src="/screenshots/screenshot-mobile-product.png" alt="Mobile Screenshot - Product Page" width="64px"/></a>
 
-## Author
-Rashid Shamloo
-
-- Portfolio - [rashidshamloo.com](https://www.rashidshamloo.com)
-- Linkedin - [rashid-shamloo](https://www.linkedin.com/in/rashid-shamloo/)
-- Dev.to - [@rashidshamloo](https://dev.to/rashidshamloo)
-- Twitter - [@rashidshamloo](https://www.twitter.com/rashidshamloo)
-- Email - [rashidshamloo@gmail.com](mailto:rashidshamloo@gmail.com)
-
