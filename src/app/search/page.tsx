@@ -17,11 +17,11 @@ export default async function SearchPage({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const { sort, q: searchValue, category } = searchParams as { [key: string]: string };
-  
+
   // Parse sort parameter
   let sortBy = 'price';
   let sortOrder = 'asc';
-  
+
   if (sort) {
     const [sortField, order] = sort.split('-');
     if (sortField === 'price' || sortField === 'createdAt') {
@@ -29,15 +29,15 @@ export default async function SearchPage({
       sortOrder = order || 'asc';
     }
   }
-  
+
   console.log('Sort params:', { sortBy, sortOrder });
-  
-  const { products, total } = await getProducts({ 
+
+  const { products, total } = await getProducts({
     query: searchValue,
     sortBy,
     sortOrder: sortOrder as 'asc' | 'desc',
     page: 0,
-    limit: 12,
+    limit: 500,
     category
   });
 
@@ -58,6 +58,17 @@ export default async function SearchPage({
                   <span className="font-bold text-[#daa520]">&quot;{searchValue}&quot;</span>
                 </p>
               </div>
+            ) : category ? (
+              <div className="text-center">
+                <h1 className="font-lora text-3xl font-bold capitalize text-[#daa520]">
+                  {category.replace('-', ' ')}
+                </h1>
+                <p className="mt-2 text-lg text-gray-300">
+                  {total === 0
+                    ? 'No products found in this category'
+                    : `Showing ${total} ${resultsText} in this category`}
+                </p>
+              </div>
             ) : (
               <h1 className="font-lora text-3xl font-bold text-[#daa520]">All Products</h1>
             )}
@@ -68,12 +79,15 @@ export default async function SearchPage({
           </div>
 
           <div className="flex justify-end">
-            <FilterList list={[
-              { title: 'Price: Low to High', slug: 'price-asc' },
-              { title: 'Price: High to Low', slug: 'price-desc' },
-              { title: 'Latest', slug: 'createdAt-desc' },
-              { title: 'Oldest', slug: 'createdAt-asc' }
-            ]} title="Sort by" />
+            <FilterList
+              list={[
+                { title: 'Price: Low to High', slug: 'price-asc' },
+                { title: 'Price: High to Low', slug: 'price-desc' },
+                { title: 'Latest', slug: 'createdAt-desc' },
+                { title: 'Oldest', slug: 'createdAt-asc' }
+              ]}
+              title="Sort by"
+            />
           </div>
         </div>
       </div>
