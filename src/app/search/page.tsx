@@ -70,7 +70,14 @@ export default async function SearchPage({
                 </p>
               </div>
             ) : (
-              <h1 className="font-lora text-3xl font-bold text-[#daa520]">All Products</h1>
+              <div className="text-center">
+                <h1 className="font-lora text-3xl font-bold text-[#daa520]">All Products</h1>
+                <p className="mt-2 text-lg text-gray-300">
+                  {total === 0
+                    ? 'No products found'
+                    : `Showing ${total} ${resultsText} in this category`}
+                </p>
+              </div>
             )}
 
             <div className="w-full max-w-[500px]">
@@ -79,15 +86,17 @@ export default async function SearchPage({
           </div>
 
           <div className="flex justify-end">
-            <FilterList
-              list={[
-                { title: 'Price: Low to High', slug: 'price-asc' },
-                { title: 'Price: High to Low', slug: 'price-desc' },
-                { title: 'Latest', slug: 'createdAt-desc' },
-                { title: 'Oldest', slug: 'createdAt-asc' }
-              ]}
-              title="Sort by"
-            />
+            <div className="flex items-center gap-4">
+              <span className="text-lg font-medium text-gray-300">Sort by:</span>
+              <FilterList
+                list={[
+                  { title: 'Price: Low to High', slug: 'price-asc' },
+                  { title: 'Price: High to Low', slug: 'price-desc' },
+                  { title: 'Latest', slug: 'createdAt-desc' },
+                  { title: 'Oldest', slug: 'createdAt-asc' }
+                ]}
+              />
+            </div>
           </div>
         </div>
       </div>
