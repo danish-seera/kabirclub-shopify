@@ -100,7 +100,7 @@ const ProductCard = ({
               </div>
             )}
             <Image
-              src={product.images[0]?.url || ''}
+              src={product.images[0]?.url || '/images/placeholder.png'}
               alt="product image"
               fill
               sizes="(min-width: 768px) 280px, 180px"
@@ -109,18 +109,20 @@ const ProductCard = ({
                 'opacity-100': activeImage === 'main'
               })}
             />
-            <Image
-              src={product.images[1]?.url || ''}
-              alt="product image"
-              fill
-              sizes="(min-width: 768px) 280px, 180px"
-              className={clsx('object-cover transition-all duration-500 will-change-transform', {
-                'opacity-0': activeImage !== 'hover',
-                'opacity-100': activeImage === 'hover'
-              })}
-            />
+            {product.images[1]?.url && (
+              <Image
+                src={product.images[1].url}
+                alt="product image"
+                fill
+                sizes="(min-width: 768px) 280px, 180px"
+                className={clsx('object-cover transition-all duration-500 will-change-transform', {
+                  'opacity-0': activeImage !== 'hover',
+                  'opacity-100': activeImage === 'hover'
+                })}
+              />
+            )}
             {colorVariants.map((variant, i) => {
-              return (
+              return variant.image ? (
                 <Image
                   key={i}
                   src={variant.image}
@@ -135,7 +137,7 @@ const ProductCard = ({
                     }
                   )}
                 />
-              );
+              ) : null;
             })}
           </div>
         </a>
