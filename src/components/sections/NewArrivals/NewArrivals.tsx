@@ -5,7 +5,11 @@ import { getProducts } from '@/lib/shopify';
 import ProductList from './ProductList';
 
 const NewArrivals = async () => {
-  const products = await getProducts({ sortKey: 'CREATED_AT', reverse: true, first: 6 });
+  const { products } = await getProducts({ 
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    limit: 6
+  });
   return (
     <section className="flex w-full items-center justify-center bg-black pb-[48px] pt-[24px] md:pt-[48px]">
       <div className="flex flex-col items-center justify-center gap-[24px] sm:max-w-[95%] md:w-[904px] md:gap-[48px]">
