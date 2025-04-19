@@ -1,3 +1,4 @@
+import { Product } from '@/lib/shopify/types';
 import { revalidateTag } from 'next/cache';
 
 // Mock data
@@ -29,7 +30,7 @@ const mockMenu = {
 const mockProducts = [
   {
     id: '1',
-    title: 'Product 1',
+    title: 'Product 100',
     handle: 'product-1',
     description: 'This is a mock product',
     descriptionHtml: '<p>This is a mock product</p>',
@@ -436,7 +437,105 @@ export async function getCollectionProducts({
   sortKey?: string;
   reverse?: boolean;
 }) {
-  return mockProducts;
+  try {
+    console.log('Fetching collection products with params:', { collection, sortKey, reverse }); // Debug log
+
+    const params = new URLSearchParams();
+    // Map collection to category for the API
+    const category = collection === 'topwear' ? 'Shirts' : collection;
+    params.append('category', category);
+
+    const url = `http://localhost:8081/api/products/best-sellers?${params.toString()}`;
+    console.log('Fetching from URL:', url); // Debug log
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      console.error('Error response:', await response.text()); // Debug log
+      throw new Error(`Failed to fetch collection products: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('Received data:', data); // Debug log
+    
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch collection products');
+    }
+
+    // Transform the response data to match Product type
+    const products: Product[] = data.data.flatMap((categoryData: any) => 
+      categoryData.products.map((product: any) => ({
+        id: product.id,
+        handle: product.handle,
+        availableForSale: true,
+        title: product.title,
+        description: product.description,
+        descriptionHtml: `<p>${product.description}</p>`,
+        options: [
+          {
+            id: 'size',
+            name: 'Size',
+            values: product.variants.map((variant: any) => variant.title)
+          }
+        ],
+        priceRange: {
+          maxVariantPrice: {
+            amount: product.price.toString(),
+            currencyCode: 'INR'
+          },
+          minVariantPrice: {
+            amount: product.price.toString(),
+            currencyCode: 'INR'
+          }
+        },
+        variants: product.variants.map((variant: any) => ({
+          id: variant.id,
+          title: variant.title,
+          availableForSale: true,
+          selectedOptions: [
+            {
+              name: 'Size',
+              value: variant.title
+            }
+          ],
+          price: {
+            amount: variant.price.toString(),
+            currencyCode: 'INR'
+          }
+        })),
+        images: product.images.map((image: any) => ({
+          url: image.url,
+          altText: image.altText || product.title,
+          width: 800,
+          height: 800
+        })),
+        featuredImage: {
+          url: product.images[0]?.url || '',
+          altText: product.images[0]?.altText || product.title,
+          width: 800,
+          height: 800
+        },
+        seo: {
+          title: product.title,
+          description: product.description
+        },
+        tags: [],
+        updatedAt: new Date().toISOString()
+      }))
+    );
+
+    console.log('Transformed products:', products); // Debug log
+    return products;
+  } catch (error) {
+    console.error('Error fetching collection products:', error);
+    return [];
+  }
 }
 
 export async function revalidate(req: Request) {
@@ -534,6 +633,111 @@ export async function getProductRecommendations(productId: string) {
     }));
   } catch (error) {
     console.error('Error fetching recommendations:', error);
+    return [];
+  }
+}
+
+export async function getBestSellers(category?: 'Shirts' | 'Jeans' | 'Perfumes' | 'Topwear' | 'All', limit?: number): Promise<Product[]> {
+  try {
+    console.log('Fetching best sellers with params:', { category, limit }); // Debug log
+
+    const params = new URLSearchParams();
+    if (category && category !== 'All') {
+      // Map Topwear to Shirts for the API
+      const apiCategory = category === 'Topwear' ? 'Shirts' : category;
+      params.append('category', apiCategory);
+    }
+    if (limit) params.append('limit', limit.toString());
+
+    const url = `http://localhost:8081/api/products/best-sellers?${params.toString()}`;
+    console.log('Fetching from URL:', url); // Debug log
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      console.error('Error response:', await response.text()); // Debug log
+      throw new Error(`Failed to fetch best sellers: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('Received data:', data); // Debug log
+    
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch best sellers');
+    }
+
+    // Transform the response data to match Product type
+    const products: Product[] = data.data.flatMap((categoryData: any) => 
+      categoryData.products.map((product: any) => ({
+        id: product.id,
+        handle: product.handle,
+        availableForSale: true,
+        title: product.title,
+        description: product.description,
+        descriptionHtml: `<p>${product.description}</p>`,
+        options: [
+          {
+            id: 'size',
+            name: 'Size',
+            values: product.variants.map((variant: any) => variant.title)
+          }
+        ],
+        priceRange: {
+          maxVariantPrice: {
+            amount: product.price.toString(),
+            currencyCode: 'INR'
+          },
+          minVariantPrice: {
+            amount: product.price.toString(),
+            currencyCode: 'INR'
+          }
+        },
+        variants: product.variants.map((variant: any) => ({
+          id: variant.id,
+          title: variant.title,
+          availableForSale: true,
+          selectedOptions: [
+            {
+              name: 'Size',
+              value: variant.title
+            }
+          ],
+          price: {
+            amount: variant.price.toString(),
+            currencyCode: 'INR'
+          }
+        })),
+        images: product.images.map((image: any) => ({
+          url: image.url,
+          altText: image.altText || product.title,
+          width: 800,
+          height: 800
+        })),
+        featuredImage: {
+          url: product.images[0]?.url || '',
+          altText: product.images[0]?.altText || product.title,
+          width: 800,
+          height: 800
+        },
+        seo: {
+          title: product.title,
+          description: product.description
+        },
+        tags: [],
+        updatedAt: new Date().toISOString()
+      }))
+    );
+
+    console.log('Transformed products:', products); // Debug log
+    return products;
+  } catch (error) {
+    console.error('Error fetching best sellers:', error);
     return [];
   }
 }
