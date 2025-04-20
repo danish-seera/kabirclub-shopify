@@ -1,15 +1,12 @@
 // shopify
-import { getProducts } from '@/lib/shopify';
 
 // components
 import ProductList from './ProductList';
 
 const NewArrivals = async () => {
-  const { products } = await getProducts({ 
-    sortBy: 'createdAt',
-    sortOrder: 'desc',
-    limit: 6
-  });
+  const response = await fetch('http://localhost:8081/api/products?sortBy=createdAt&sortOrder=desc&page=0&limit=4');
+  const { products } = await response.json();
+  
   return (
     <section className="flex w-full items-center justify-center bg-black pb-[48px] pt-[24px] md:pt-[48px]">
       <div className="flex flex-col items-center justify-center gap-[24px] sm:max-w-[95%] md:w-[904px] md:gap-[48px]">
@@ -17,7 +14,7 @@ const NewArrivals = async () => {
           New Arrivals
         </h2>
         <ProductList products={products} />
-        <a href="/search/all-products" className="btn text-[clamp(18px,10px_+_2vw,22px)]">
+        <a href="/search?sort=createdAt-desc" className="btn text-[clamp(18px,10px_+_2vw,22px)]">
           View More
         </a>
       </div>
