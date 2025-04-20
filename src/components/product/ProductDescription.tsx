@@ -26,7 +26,7 @@ const ProductDescription = ({ product }: { product: Product }) => {
         id: variant.id,
         availableForSale: variant.availableForSale,
         price: variant.price.amount,
-        // Adds key / value pairs for each variant (ie. "color": "Black" and "size": 'M").
+        // Adds key / value pairs for each variant (ie. "color": "Black" and "size": 'M').
         ...variant.selectedOptions.reduce(
           (accumulator, option) => ({ ...accumulator, [option.name.toLowerCase()]: option.value }),
           {}
@@ -70,7 +70,11 @@ const ProductDescription = ({ product }: { product: Product }) => {
       </div>
       <div className="my-2 h-[1px] w-full bg-purple"></div>
       <div className="w-full">
-        <AddToCart variants={product.variants} availableForSale={product.availableForSale} />
+        <AddToCart 
+          variants={product.variants} 
+          availableForSale={product.availableForSale} 
+          productHandle={product.handle}
+        />
       </div>
     </div>
   );

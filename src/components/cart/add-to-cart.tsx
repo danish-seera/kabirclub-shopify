@@ -1,22 +1,18 @@
 'use client';
 
-import { addItem } from '@/components/cart/actions';
-import { ProductVariant } from '@/lib/shopify/types';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
-import { useFormState, useFormStatus } from 'react-dom';
-import Loading from 'react-loading';
 
-function SubmitButton({
+function ContactUsButton({
   availableForSale,
-  selectedVariantId
+  selectedVariantId,
+  productHandle
 }: {
   availableForSale: boolean;
   selectedVariantId: string | undefined;
+  productHandle: string;
 }) {
-  const { pending } = useFormStatus();
-  const buttonClasses = 'text-[22px] font-quicksand';
-  // 'relative flex w-full items-center justify-center rounded-full bg-blue-600 p-4 tracking-wide text-white';
+  const buttonClasses = 'relative flex w-full items-center justify-center rounded-full bg-blue-600 p-4 tracking-wide text-white text-[22px] font-quicksand';
   const disabledClasses = 'btn-cart-disabled cursor-not-allowed opacity-60 hover:opacity-60';
 
   if (!availableForSale) {
@@ -35,61 +31,41 @@ function SubmitButton({
     );
   }
 
+  const productUrl = `https://kabirclub.com/product/${productHandle}`;
+  const whatsappMessage = `Hi KabirClub, I am interested in your products. ${productUrl}`;
+  const encodedMessage = encodeURIComponent(whatsappMessage);
+
   return (
-    <button
-      onClick={(e: React.FormEvent<HTMLButtonElement>) => {
-        if (pending) e.preventDefault();
-      }}
-      aria-label="Add to cart"
-      aria-disabled={pending}
-      className={clsx(buttonClasses, 'btn-cart', {
-        'hover:opacity-90': true,
-        disabledClasses: pending
+    <a
+      href={`https://wa.me/917991812899?text=${encodedMessage}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={clsx(buttonClasses, {
+        'hover:opacity-90': true
       })}
     >
-      <div className="absolute left-0 ml-4">
-        {/* {pending ? <LoadingDots className="mb-3 bg-white" /> : <PlusIcon className="h-5" />} */}
-      </div>
-      {pending && (
-        <>
-          <Loading
-            color="white"
-            type="spin"
-            width="20px"
-            height="18px"
-            className="inline-block text-[12px]"
-          />{' '}
-        </>
-      )}
-      Add To Cart
-    </button>
+      Contact Us
+    </a>
   );
 }
 
 export function AddToCart({
   variants,
-  availableForSale
+  availableForSale,
+  productHandle
 }: {
-  variants: ProductVariant[];
+  variants: any[];
   availableForSale: boolean;
+  productHandle: string;
 }) {
-  const [message, formAction] = useFormState(addItem, null);
   const searchParams = useSearchParams();
   const defaultVariantId = variants.length === 1 ? variants[0]?.id : undefined;
-  const variant = variants.find((variant: ProductVariant) =>
+  const variant = variants.find((variant: any) =>
     variant.selectedOptions.every(
-      (option) => option.value === searchParams.get(option.name.toLowerCase())
+      (option: any) => option.value === searchParams.get(option.name.toLowerCase())
     )
   );
   const selectedVariantId = variant?.id || defaultVariantId;
-  const actionWithVariant = formAction.bind(null, selectedVariantId);
 
-  return (
-    <form action={actionWithVariant}>
-      <SubmitButton availableForSale={availableForSale} selectedVariantId={selectedVariantId} />
-      <p aria-live="polite" className="sr-only" role="status">
-        {message}
-      </p>
-    </form>
-  );
+  return <ContactUsButton availableForSale={availableForSale} selectedVariantId={selectedVariantId} productHandle={productHandle} />;
 }
