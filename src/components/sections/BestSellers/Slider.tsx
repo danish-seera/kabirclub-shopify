@@ -57,17 +57,33 @@ const Slider = ({ collection }: { collection: Collection }) => {
     <>
       <Swiper
         modules={[Navigation, A11y]}
-        slidesPerView="auto"
+        slidesPerView={1.1}
         spaceBetween={16}
         slidesOffsetBefore={16}
         slidesOffsetAfter={16}
+        freeMode={true}
+        grabCursor={true}
         breakpoints={{
+          0: {
+            slidesPerView: 1.1,
+            spaceBetween: 16,
+            slidesOffsetBefore: 16,
+            slidesOffsetAfter: 16
+          },
+          480: {
+            slidesPerView: 1.5,
+            spaceBetween: 16,
+            slidesOffsetBefore: 16,
+            slidesOffsetAfter: 16
+          },
           768: {
+            slidesPerView: 2.5,
             spaceBetween: 32,
             slidesOffsetBefore: 32,
             slidesOffsetAfter: 32
           },
           1024: {
+            slidesPerView: 3,
             spaceBetween: 32,
             slidesOffsetBefore: 0,
             slidesOffsetAfter: 0
