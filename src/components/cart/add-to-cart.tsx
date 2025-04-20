@@ -12,22 +12,26 @@ function ContactUsButton({
   selectedVariantId: string | undefined;
   productHandle: string;
 }) {
-  const buttonClasses = 'relative flex w-full items-center justify-center rounded-full bg-blue-600 p-4 tracking-wide text-white text-[22px] font-quicksand';
+  const buttonClasses = 'relative flex items-center justify-center rounded-[16px] border-2 border-darkPurple bg-lightPurple px-[24px] py-[12px] font-quicksand text-[20px] font-medium text-darkPurple transition-all duration-300 hover:bg-purple hover:text-white w-fit';
   const disabledClasses = 'btn-cart-disabled cursor-not-allowed opacity-60 hover:opacity-60';
 
   if (!availableForSale) {
     return (
-      <button aria-disabled className={clsx(buttonClasses, disabledClasses)}>
-        Out Of Stock
-      </button>
+      <div className="flex justify-center">
+        <button aria-disabled className={clsx(buttonClasses, disabledClasses)}>
+          Out Of Stock
+        </button>
+      </div>
     );
   }
 
   if (!selectedVariantId) {
     return (
-      <button aria-disabled className={clsx(buttonClasses, disabledClasses)}>
-        Please select an option
-      </button>
+      <div className="flex justify-center">
+        <button aria-disabled className={clsx(buttonClasses, disabledClasses)}>
+          Please select an option
+        </button>
+      </div>
     );
   }
 
@@ -36,16 +40,16 @@ function ContactUsButton({
   const encodedMessage = encodeURIComponent(whatsappMessage);
 
   return (
-    <a
-      href={`https://wa.me/917991812899?text=${encodedMessage}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={clsx(buttonClasses, {
-        'hover:opacity-90': true
-      })}
-    >
-      Contact Us
-    </a>
+    <div className="flex justify-center">
+      <a
+        href={`https://wa.me/917991812899?text=${encodedMessage}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonClasses}
+      >
+        Contact Us
+      </a>
+    </div>
   );
 }
 
