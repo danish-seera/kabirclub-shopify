@@ -190,7 +190,7 @@ const mockCart = {
 // Mock implementations
 export async function getMenu(handle: string) {
   try {
-    const response = await fetch('http://localhost:8081/api/menu');
+    const response = await fetch('https://backend-production-909b.up.railway.app/api/menu');
     if (!response.ok) {
       throw new Error(`Failed to fetch menu: ${response.status}`);
     }
@@ -304,7 +304,7 @@ export async function getProducts({
 
 export async function getProduct(handle: string) {
   try {
-    const response = await fetch(`http://localhost:8081/api/products/${handle}`);
+    const response = await fetch(`https://backend-production-909b.up.railway.app/api/products/${handle}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch product: ${response.status}`);
     }
@@ -445,7 +445,7 @@ export async function getCollectionProducts({
     const category = collection === 'topwear' ? 'Shirts' : collection;
     params.append('category', category);
 
-    const url = `http://localhost:8081/api/products/best-sellers?${params.toString()}`;
+    const url = `https://backend-production-909b.up.railway.app/api/products/best-sellers?${params.toString()}`;
     console.log('Fetching from URL:', url); // Debug log
 
     const response = await fetch(url, {
@@ -562,7 +562,7 @@ export async function revalidate(req: Request) {
 
 export async function getProductRecommendations(productId: string) {
   try {
-    const response = await fetch(`http://localhost:8081/api/products/${productId}/recommendations`);
+    const response = await fetch(`https://backend-production-909b.up.railway.app/api/products/${productId}/recommendations`);
     if (!response.ok) {
       throw new Error(`Failed to fetch recommendations: ${response.status}`);
     }
@@ -649,7 +649,7 @@ export async function getBestSellers(category?: 'Shirts' | 'Jeans' | 'Perfumes' 
     }
     if (limit) params.append('limit', limit.toString());
 
-    const url = `http://localhost:8081/api/products/best-sellers?${params.toString()}`;
+    const url = `https://backend-production-909b.up.railway.app/api/products/best-sellers?${params.toString()}`;
     console.log('Fetching from URL:', url); // Debug log
 
     const response = await fetch(url, {

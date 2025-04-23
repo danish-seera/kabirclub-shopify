@@ -4,7 +4,7 @@
 import ProductList from './ProductList';
 
 const NewArrivals = async () => {
-  const response = await fetch('http://localhost:8081/api/products?sortBy=createdAt&sortOrder=desc&page=0&limit=6');
+  const response = await fetch('https://backend-production-909b.up.railway.app/api/products?sortBy=createdAt&sortOrder=desc&page=0&limit=6');
   const { products } = await response.json();
   
   return (

@@ -1,6 +1,6 @@
 import { ProductListResponse } from '../types/product';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-production-909b.up.railway.app';
 
 export async function getProducts(params: {
   query?: string;
@@ -19,7 +19,7 @@ export async function getProducts(params: {
   if (params.limit) searchParams.append('limit', params.limit.toString());
   if (params.category) searchParams.append('category', params.category);
 
-  const url = `${API_URL}/api/products?${searchParams.toString()}`;
+  const url = `https://backend-production-909b.up.railway.app/api/products?${searchParams.toString()}`;
   console.log('API URL:', url);
 
   try {

@@ -62,7 +62,7 @@ const Promotions = () => {
           <p className="text-[clamp(18px,10px_+_2vw,32px)] font-semibold text-white drop-shadow-md">
             Experience luxury with our premium summer collection!
           </p>
-          <a className="btn bg-[#daa520] hover:bg-[#b38a1d] text-black text-[clamp(16px,8px_+_2vw,22px)] border-0" href="/search/winter-2024">
+          <a className="btn bg-[#daa520] hover:bg-[#b38a1d] text-black text-[clamp(16px,8px_+_2vw,22px)] border-0" href="/search?category=topwear">
             View Collection
           </a>
           <a 
