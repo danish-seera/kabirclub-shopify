@@ -20,14 +20,14 @@ const Header = async () => {
       <h1 className="sr-only">KabirClub</h1>
       <nav className="flex h-full w-full max-w-full items-center justify-between md:w-[1440px]">
         <h2 className="sr-only">Main Navigation Menu</h2>
-        <div className="flex h-full w-full items-center justify-between">
+        <div className="flex h-20 w-full items-center justify-between">
           <div className="md:hidden">
             <MobileMenu menu={menu} />
           </div>
           <Link
             href="/"
             title="Home"
-            className="header-link flex h-full items-center justify-center"
+            className="header-link flex h-full items-center justify-center ml-6 md:ml-20"
           >
             <Logo size="sm" />
           </Link>
