@@ -1,5 +1,6 @@
 import { Product } from '@/lib/shopify/types';
 import { revalidateTag } from 'next/cache';
+import { NextResponse } from 'next/server';
 
 // Mock data
 const mockMenu = {
@@ -543,21 +544,16 @@ export async function revalidate(req: Request) {
   const { tag, secret } = body;
 
   if (secret !== process.env.REVALIDATE_SECRET) {
-    return new Response('Invalid secret', { status: 401 });
+    return NextResponse.json({ error: 'Invalid secret' }, { status: 401 });
   }
 
   if (!tag) {
-    return new Response('Missing tag param', { status: 400 });
+    return NextResponse.json({ error: 'Missing tag param' }, { status: 400 });
   }
 
   revalidateTag(tag);
 
-  return new Response(JSON.stringify({ revalidated: true, now: Date.now() }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
+  return NextResponse.json({ revalidated: true, now: Date.now() });
 }
 
 export async function getProductRecommendations(productId: string) {

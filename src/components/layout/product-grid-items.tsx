@@ -29,13 +29,13 @@ export default function ProductGridItems({ products }: { products: Product[] }) 
             <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6">
               <h3 className="text-xl font-semibold text-[#daa520]">{product.title}</h3>
               <p className="mt-1 text-sm text-gray-300">₹{product.price}</p>
-              <div className="mt-2 flex flex-wrap gap-1">
+              {/* <div className="mt-2 flex flex-wrap gap-1">
                 {product.tags.map(tag => (
                   <span key={tag.id} className="rounded-full bg-[#daa520]/20 px-2 py-1 text-xs text-[#daa520]">
                     {tag.tag}
                   </span>
                 ))}
-              </div>
+              </div> */}
             </div>
           </Link>
         );

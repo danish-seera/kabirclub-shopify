@@ -20,6 +20,10 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'plus.unsplash.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co'
       }
     ]
   },

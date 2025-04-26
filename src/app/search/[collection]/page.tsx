@@ -45,6 +45,7 @@ export default async function CategoryPage({
             {params.collection.replace('-', ' ')}
           </h2>
           <Grid className="grid-cols-1 items-start justify-center sm:grid-cols-2 lg:grid-cols-3">
+            {/* @ts-ignore */}
             <ProductGridItems products={products} />
           </Grid>
         </div>
