@@ -159,8 +159,8 @@ const ProductCard = ({
           })}
         </div>
         <a href={'/product/' + product.handle}>
-          <h3 className="text-center font-quicksand text-[clamp(20px,8px_+_2vw,22px)] font-bold text-darkPurple transition-all duration-300 hover:text-purple">
-            {product.title}
+          <h3 className="text-center font-quicksand text-[clamp(20px,8px_+_2vw,22px)] font-bold text-darkPurple transition-all duration-300 hover:text-purple truncate whitespace-nowrap overflow-hidden">
+            {product.title.split(' ').slice(0, 2).join(' ')}
           </h3>
         </a>
         <p className="font-lora text-[clamp(20px,8px_+_2vw,24px)] text-darkPurple">
