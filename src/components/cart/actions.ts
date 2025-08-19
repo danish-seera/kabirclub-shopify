@@ -2,6 +2,7 @@
 
 import { addToCart, removeFromCart, updateCartItem } from '@/lib/supabase/api';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 
 export async function addItem(prevState: any, payload: { productId: string; quantity: number; size: string } | string) {
   let sessionId = cookies().get('sessionId')?.value;
@@ -23,7 +24,7 @@ export async function addItem(prevState: any, payload: { productId: string; quan
   }
 
   if (!productId) {
-    return 'Missing product ID';
+    return { success: false, error: 'Missing product ID' };
   }
 
   try {
@@ -32,16 +33,28 @@ export async function addItem(prevState: any, payload: { productId: string; quan
       quantity,
       sessionId
     });
+    
+    // Revalidate cart-related pages
+    revalidatePath('/');
+    revalidatePath('/cart');
+    
+    return { success: true, message: 'Item added to cart successfully' };
   } catch (e) {
-    return 'Error adding item to cart';
+    return { success: false, error: 'Error adding item to cart' };
   }
 }
 
 export async function removeItem(prevState: any, lineId: string) {
   try {
     await removeFromCart(lineId);
+    
+    // Revalidate cart-related pages
+    revalidatePath('/');
+    revalidatePath('/cart');
+    
+    return { success: true, message: 'Item removed from cart successfully' };
   } catch (e) {
-    return 'Error removing item from cart';
+    return { success: false, error: 'Error removing item from cart' };
   }
 }
 
@@ -58,14 +71,19 @@ export async function updateItemQuantity(
   try {
     if (quantity === 0) {
       await removeFromCart(lineId);
-      return;
+    } else {
+      await updateCartItem({
+        itemId: lineId,
+        quantity
+      });
     }
-
-    await updateCartItem({
-      itemId: lineId,
-      quantity
-    });
+    
+    // Revalidate cart-related pages
+    revalidatePath('/');
+    revalidatePath('/cart');
+    
+    return { success: true, message: 'Cart updated successfully' };
   } catch (e) {
-    return 'Error updating item quantity';
+    return { success: false, error: 'Error updating item quantity' };
   }
 }

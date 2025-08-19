@@ -20,13 +20,12 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [showSizeError, setShowSizeError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   const handleAddToCart = async () => {
-    // Check if user is authenticated
     if (!isAuthenticated()) {
-      // Redirect to login page
       router.push('/login');
       return;
     }
@@ -39,22 +38,25 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
 
     setIsAddingToCart(true);
     setShowSuccess(false);
+    setErrorMessage('');
     try {
       const result = await addItem(null, {
         productId: product.id,
         quantity,
         size: selectedSize
       });
-      if (result) {
-        console.error('Error adding to cart:', result);
-        // Handle error display
-      } else {
+      
+      if (result && result.success) {
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
+        // Dispatch custom event to update cart in real-time
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+      } else {
+        setErrorMessage(result?.error || 'Failed to add item to cart.');
       }
     } catch (e) {
+      setErrorMessage('Failed to add item to cart: ' + e);
       console.error('Failed to add to cart:', e);
-      // Handle error display
     } finally {
       setIsAddingToCart(false);
     }
@@ -109,6 +111,9 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
         {showSizeError && (
           <p className="text-red-500 text-sm mt-2">Please select a size.</p>
         )}
+        {errorMessage && (
+          <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+        )}
       </div>
 
       {/* Quantity Selector */}
@@ -156,7 +161,10 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
           {isAddingToCart ? 'Adding...' : (isAuthenticated() ? 'Add to Cart' : 'Login to Add to Cart')}
         </button>
         {showSuccess && (
-          <p className="text-green-500 text-center text-sm">Item added to cart!</p>
+          <p className="text-green-500 text-center text-sm font-semibold">✅ Item added to cart successfully!</p>
+        )}
+        {errorMessage && (
+          <p className="text-red-500 text-center text-sm font-semibold">❌ {errorMessage}</p>
         )}
         <a
           href={`https://wa.me/917991812899?text=I'm interested in the product: ${product.title} (Size: ${selectedSize}, Quantity: ${quantity}). Product ID: ${product.id}`}
