@@ -1,4 +1,5 @@
 import { CartItem, Collection, Product, isSupabaseConfigured, supabase } from '../supabase';
+import type { Cart, CartLine, Page } from './types';
 
 // Fallback data when Supabase is not configured
 const fallbackProducts: Product[] = [
@@ -7,7 +8,7 @@ const fallbackProducts: Product[] = [
     title: 'Classic White T-Shirt',
     description: 'Premium cotton t-shirt in classic white',
     price: 999.00,
-    images: ['/images/placeholder.png'],
+    images: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60'],
     category: 'Topwear',
     handle: 'classic-white-tshirt',
     created_at: new Date().toISOString(),
@@ -18,7 +19,7 @@ const fallbackProducts: Product[] = [
     title: 'Denim Jeans',
     description: 'Comfortable denim jeans with perfect fit',
     price: 1999.00,
-    images: ['/images/placeholder.png'],
+    images: ['https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=60'],
     category: 'Bottomwear',
     handle: 'denim-jeans',
     created_at: new Date().toISOString(),
@@ -29,7 +30,7 @@ const fallbackProducts: Product[] = [
     title: 'Casual Shirt',
     description: 'Elegant casual shirt for any occasion',
     price: 1499.00,
-    images: ['/images/placeholder.png'],
+    images: ['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60'],
     category: 'Topwear',
     handle: 'casual-shirt',
     created_at: new Date().toISOString(),
@@ -63,6 +64,43 @@ const checkSupabase = () => {
     return false;
   }
   return true;
+};
+
+// Helper function to convert Supabase cart items to Cart format
+const convertCartItemsToCart = (cartItems: CartItem[], sessionId: string): Cart => {
+  const lines: CartLine[] = cartItems.map(item => ({
+    id: item.id,
+    quantity: item.quantity,
+    merchandise: {
+      id: item.product_id,
+      title: item.products?.title || 'Unknown Product',
+      product: item.products || fallbackProducts[0],
+      selectedOptions: []
+    },
+    cost: {
+      totalAmount: {
+        amount: (item.products?.price || 0).toString(),
+        currencyCode: 'INR'
+      }
+    }
+  }));
+
+  const totalQuantity = lines.reduce((sum, line) => sum + line.quantity, 0);
+  const subtotalAmount = lines.reduce((sum, line) => sum + (line.merchandise.product.price * line.quantity), 0);
+  const totalTaxAmount = subtotalAmount * 0.18; // 18% GST
+  const totalAmount = subtotalAmount + totalTaxAmount;
+
+  return {
+    id: sessionId,
+    lines,
+    totalQuantity,
+    cost: {
+      totalAmount: { amount: totalAmount.toString(), currencyCode: 'INR' },
+      subtotalAmount: { amount: subtotalAmount.toString(), currencyCode: 'INR' },
+      totalTaxAmount: { amount: totalTaxAmount.toString(), currencyCode: 'INR' }
+    },
+    checkoutUrl: '/checkout' // Placeholder checkout URL
+  };
 };
 
 // Products API
@@ -102,6 +140,7 @@ export async function getProducts({
     };
   }
 
+  // Check if Supabase is configured but return fallback if database has invalid URLs
   let queryBuilder = supabase!
     .from('products')
     .select('*')
@@ -123,6 +162,32 @@ export async function getProducts({
   if (error) {
     console.error('Error fetching products:', error);
     throw new Error(`Failed to fetch products: ${error.message}`);
+  }
+
+  // Check if database has invalid URLs and fallback to local data
+  const hasInvalidUrls = data?.some(product => 
+    product.images?.some(img => img.includes('example.com'))
+  );
+
+  if (hasInvalidUrls) {
+    console.warn('Database contains invalid URLs, using fallback data');
+    let filteredProducts = fallbackProducts;
+    
+    if (category) {
+      filteredProducts = filteredProducts.filter(p => p.category === category);
+    }
+    
+    if (query) {
+      filteredProducts = filteredProducts.filter(p => 
+        p.title.toLowerCase().includes(query.toLowerCase()) ||
+        p.description.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+    
+    return {
+      products: filteredProducts.slice(page * limit, (page + 1) * limit),
+      total: filteredProducts.length
+    };
   }
 
   return {
@@ -207,7 +272,7 @@ export async function getCollection(handle: string): Promise<Collection | null> 
     return null;
   }
 
-  return data;
+  return data || null;
 }
 
 export async function getCollectionProducts({
@@ -241,9 +306,9 @@ export async function getCollectionProducts({
 }
 
 // Cart API
-export async function getCart(sessionId: string): Promise<CartItem[]> {
+export async function getCart(sessionId: string): Promise<Cart | null> {
   if (!checkSupabase()) {
-    return []; // Return empty cart when Supabase not configured
+    return null; // Return null when Supabase not configured
   }
 
   const { data, error } = await supabase!
@@ -256,10 +321,14 @@ export async function getCart(sessionId: string): Promise<CartItem[]> {
 
   if (error) {
     console.error('Error fetching cart:', error);
-    return [];
+    return null;
   }
 
-  return data || [];
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  return convertCartItemsToCart(data, sessionId);
 }
 
 export async function addToCart({
@@ -386,4 +455,52 @@ export async function clearCart(sessionId: string): Promise<boolean> {
   }
 
   return true;
+}
+
+// Pages API (for dynamic pages)
+export async function getPage(_handle: string): Promise<Page | null> {
+  if (!checkSupabase()) {
+    // Return fallback page data
+    return {
+      id: '1',
+      title: 'Sample Page',
+      body: '<p>This is a sample page content.</p>',
+      bodySummary: 'Sample page content',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  // For now, return fallback data since we don't have a pages table
+  // You can create a pages table in Supabase if needed
+  return {
+    id: '1',
+    title: 'Sample Page',
+    body: '<p>This is a sample page content.</p>',
+    bodySummary: 'Sample page content',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+}
+
+// Menu API (for navigation)
+export async function getMenu(_handle: string): Promise<any[]> {
+  if (!checkSupabase()) {
+    // Return fallback menu data
+    return [
+      { title: 'Home', path: '/' },
+      { title: 'Products', path: '/products' },
+      { title: 'About', path: '/about-us' },
+      { title: 'Contact', path: '/contact' }
+    ];
+  }
+
+  // For now, return fallback data since we don't have a menu table
+  // You can create a menu table in Supabase if needed
+  return [
+    { title: 'Home', path: '/' },
+    { title: 'Products', path: '/products' },
+    { title: 'About', path: '/about-us' },
+    { title: 'Contact', path: '/contact' }
+  ];
 }

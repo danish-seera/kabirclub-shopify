@@ -2,29 +2,12 @@
 
 // next
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+
 
 // react-scroll-parallax
 import { Parallax, ParallaxProvider } from 'react-scroll-parallax';
 
 const Promotions = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  
-  // Check if we're on the client side and update based on screen size
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768); // 768px is standard tablet breakpoint
-    };
-    
-    // Initial check
-    checkIfMobile();
-    
-    // Update on resize
-    window.addEventListener('resize', checkIfMobile);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
 
   return (
     <ParallaxProvider>

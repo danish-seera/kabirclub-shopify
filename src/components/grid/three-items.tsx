@@ -1,6 +1,6 @@
 import { GridTileImage } from '@/components/grid/tile';
-import { getCollectionProducts } from '@/lib/shopify';
-import type { Product } from '@/lib/shopify/types';
+import { getCollectionProducts } from '@/lib/supabase/api';
+import type { Product } from '@/lib/supabase/types';
 import Link from 'next/link';
 
 function ThreeItemGridItem({
@@ -18,7 +18,7 @@ function ThreeItemGridItem({
     >
       <Link className="relative block aspect-square h-full w-full" href={`/product/${item.handle}`}>
         <GridTileImage
-          src={item.featuredImage.url}
+          src={item.images[0] || '/images/placeholder.png'}
           fill
           sizes={
             size === 'full' ? '(min-width: 768px) 66vw, 100vw' : '(min-width: 768px) 33vw, 100vw'
@@ -28,8 +28,8 @@ function ThreeItemGridItem({
           label={{
             position: size === 'full' ? 'center' : 'bottom',
             title: item.title as string,
-            amount: item.priceRange.maxVariantPrice.amount,
-            currencyCode: item.priceRange.maxVariantPrice.currencyCode
+            amount: item.price.toString(),
+            currencyCode: 'INR'
           }}
         />
       </Link>
@@ -38,9 +38,10 @@ function ThreeItemGridItem({
 }
 
 export async function ThreeItemGrid() {
-  // Collections that start with `hidden-*` are hidden from the search page.
+  // Get featured products from the 'Topwear' collection
   const homepageItems = await getCollectionProducts({
-    collection: 'hidden-homepage-featured-items'
+    collection: 'Topwear',
+    limit: 3
   });
 
   if (!homepageItems[0] || !homepageItems[1] || !homepageItems[2]) return null;

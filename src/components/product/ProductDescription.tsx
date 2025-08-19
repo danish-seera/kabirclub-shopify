@@ -1,83 +1,38 @@
-'use client';
+import { Product } from '@/lib/supabase/types';
+import Price from '../common/price';
 
-// react
-import { useMemo } from 'react';
+interface ProductDescriptionProps {
+  product: Product;
+}
 
-// components
-import { AddToCart } from '../cart/add-to-cart';
-
-// types
-import { Product } from '@/lib/shopify/types';
-import { useSearchParams } from 'next/navigation';
-import { VariantSelector } from './VariantSelector';
-export type Combination = {
-  id: string;
-  availableForSale: boolean;
-  price: string;
-  [key: string]: string | boolean; // ie. { color: 'Red', size: 'Large', ... }
-};
-
-const ProductDescription = ({ product }: { product: Product }) => {
-  const searchParams = useSearchParams();
-
-  const combinations: Combination[] = useMemo(
-    () =>
-      product.variants.map((variant) => ({
-        id: variant.id,
-        availableForSale: variant.availableForSale,
-        price: variant.price.amount,
-        // Adds key / value pairs for each variant (ie. "color": "Black" and "size": 'M').
-        ...variant.selectedOptions.reduce(
-          (accumulator, option) => ({ ...accumulator, [option.name.toLowerCase()]: option.value }),
-          {}
-        )
-      })),
-    [product.variants]
-  );
-
-  // set price of current combination
-  const tempSearchParams = new URLSearchParams(searchParams);
-  const currentCombinationPrice = combinations.find((comb) => {
-    for (const key in comb) {
-      if (
-        key !== 'id' &&
-        key !== 'price' &&
-        key !== 'availableForSale' &&
-        (!tempSearchParams.get(key) || tempSearchParams.get(key) !== comb[key])
-      )
-        return false;
-    }
-    return true;
-  })?.price;
-
-  const price = currentCombinationPrice || product.priceRange.minVariantPrice.amount;
+export default function ProductDescription({ product }: ProductDescriptionProps) {
   return (
-    <div className="sticky top-1 flex flex-col items-start justify-start gap-4 px-6 font-lora text-darkPurple">
-      <h2 className="hidden text-[clamp(28px,18px_+_2vw,40px)] font-bold leading-[1] md:block">
-        {product.title}
-      </h2>
-      <p className="text-[32px]">
-        {Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'INR' }).format(Number(price))}
-      </p>
-      <div className="h-[1px] w-full bg-purple"></div>
-      <VariantSelector options={product.options} combinations={combinations} />
+    <div className="flex flex-col gap-6">
       <div>
-        <p className="mb-2 text-[26px]">Description</p>
-        <div
-          dangerouslySetInnerHTML={{ __html: product.descriptionHtml as string }}
-          className="font-quicksand text-[18px] text-darkPurple"
-        />
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.title}</h1>
+        <p className="text-lg text-gray-600">{product.description}</p>
       </div>
-      <div className="my-2 h-[1px] w-full bg-purple"></div>
-      <div className="w-full">
-        <AddToCart 
-          variants={product.variants} 
-          availableForSale={product.availableForSale} 
-          productHandle={product.handle}
+      
+      <div className="flex items-center gap-4">
+        <Price
+          amount={product.price.toString()}
+          currencyCode="INR"
+          className="text-3xl font-bold text-[#daa520]"
         />
+        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full capitalize">
+          {product.category}
+        </span>
+      </div>
+      
+      <div className="border-t border-gray-200 pt-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-3">Product Details</h3>
+        <div className="space-y-2 text-sm text-gray-600">
+          <p><strong>Category:</strong> {product.category}</p>
+          <p><strong>Product ID:</strong> {product.id}</p>
+          <p><strong>Added:</strong> {new Date(product.created_at).toLocaleDateString()}</p>
+          <p><strong>Last Updated:</strong> {new Date(product.updated_at).toLocaleDateString()}</p>
+        </div>
       </div>
     </div>
   );
-};
-
-export default ProductDescription;
+}

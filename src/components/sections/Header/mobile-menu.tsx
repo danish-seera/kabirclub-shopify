@@ -18,7 +18,6 @@ export default function MobileMenu({ menu }: MobileMenuProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
-  const closeMobileMenu = () => setIsOpen(false);
 
   useEffect(() => {
     const handleResize = () => {

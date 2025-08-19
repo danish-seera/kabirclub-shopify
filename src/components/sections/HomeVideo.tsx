@@ -1,28 +1,11 @@
 'use client';
 
 import Logo from '@/components/layout/Logo';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 const HomeVideo = () => {
-  const [isMobile, setIsMobile] = useState(false);
   const videoRefMobile = useRef<HTMLVideoElement>(null);
   const videoRefDesktop = useRef<HTMLVideoElement>(null);
-  
-  // Check if we're on client side and update based on screen size
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768); // 768px is standard tablet breakpoint
-    };
-    
-    // Initial check
-    checkIfMobile();
-    
-    // Update on resize
-    window.addEventListener('resize', checkIfMobile);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
   
   // Play videos when component mounts
   useEffect(() => {

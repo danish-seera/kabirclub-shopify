@@ -68,9 +68,9 @@ INSERT INTO collections (title, description, handle) VALUES
 
 -- Insert sample products
 INSERT INTO products (title, description, price, category, handle, images) VALUES
-  ('Classic White T-Shirt', 'Premium cotton t-shirt in classic white', 999.00, 'Topwear', 'classic-white-tshirt', ARRAY['https://example.com/tshirt1.jpg', 'https://example.com/tshirt1-2.jpg']),
-  ('Denim Jeans', 'Comfortable denim jeans with perfect fit', 1999.00, 'Bottomwear', 'denim-jeans', ARRAY['https://example.com/jeans1.jpg']),
-  ('Casual Shirt', 'Elegant casual shirt for any occasion', 1499.00, 'Topwear', 'casual-shirt', ARRAY['https://example.com/shirt1.jpg']);
+  ('Classic White T-Shirt', 'Premium cotton t-shirt in classic white', 999.00, 'Topwear', 'classic-white-tshirt', ARRAY['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60', 'https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=800&auto=format&fit=crop&q=60']),
+  ('Denim Jeans', 'Comfortable denim jeans with perfect fit', 1999.00, 'Bottomwear', 'denim-jeans', ARRAY['https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=60']),
+  ('Casual Shirt', 'Elegant casual shirt for any occasion', 1499.00, 'Topwear', 'casual-shirt', ARRAY['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60']);
 
 -- Create RLS (Row Level Security) policies
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;

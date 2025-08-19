@@ -52,10 +52,4 @@ export default function FilterList({ list }: { list: ListItem[] }) {
   );
 }
 
-function FilterItemDropdown({ list }: { list: ListItem[] }) {
-  // Implementation of FilterItemDropdown component
-}
 
-function handleSortChange(slug: string) {
-  // Implementation of handleSortChange function
-}

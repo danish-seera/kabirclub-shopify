@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { getPage } from '@/lib/shopify';
+import { getPage } from '@/lib/supabase/api';
 import { notFound } from 'next/navigation';
 
 export const runtime = 'edge';

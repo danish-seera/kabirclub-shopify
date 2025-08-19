@@ -48,7 +48,8 @@
     "react-loading": "^2.0.3",
     "react-responsive": "^9.0.2",
     "react-scroll-parallax": "^3.4.5",
-    "swiper": "^11.0.5"
+    "swiper": "^11.0.5",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@tailwindcss/container-queries": "^0.1.1",

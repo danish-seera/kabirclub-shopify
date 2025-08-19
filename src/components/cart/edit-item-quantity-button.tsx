@@ -1,57 +1,37 @@
 'use client';
 
-import { updateItemQuantity } from '@/components/cart/actions';
-import LoadingDots from '@/components/common/loading-dots';
-import type { CartItem } from '@/lib/shopify/types';
-import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
-import { useFormState, useFormStatus } from 'react-dom';
+import { updateItemQuantity } from './actions';
+import type { CartLine } from '@/lib/supabase/types';
 
-function SubmitButton({ type }: { type: 'plus' | 'minus' }) {
-  const { pending } = useFormStatus();
+export function EditItemQuantityButton({
+  item,
+  type
+}: {
+  item: CartLine;
+  type: 'plus' | 'minus';
+}) {
+  const handleSubmit = async () => {
+    const newQuantity = type === 'plus' ? item.quantity + 1 : item.quantity - 1;
+    
+    if (newQuantity < 0) return;
+    
+    await updateItemQuantity(null, {
+      lineId: item.id,
+      variantId: item.merchandise.id,
+      quantity: newQuantity
+    });
+  };
 
   return (
     <button
-      type="submit"
-      onClick={(e: React.FormEvent<HTMLButtonElement>) => {
-        if (pending) e.preventDefault();
-      }}
-      aria-label={type === 'plus' ? 'Increase item quantity' : 'Reduce item quantity'}
-      aria-disabled={pending}
-      className={clsx(
-        'ease flex h-full min-w-[36px] max-w-[36px] flex-none items-center justify-center rounded-full px-2 transition-all duration-200 hover:scale-110 hover:text-veryDarkPurple',
-        {
-          'cursor-not-allowed': pending,
-          'ml-auto': type === 'minus'
-        }
-      )}
+      onClick={handleSubmit}
+      className="ease flex h-full min-w-[36px] max-w-[36px] flex-none items-center justify-center rounded-none px-2 transition-all duration-200 hover:border-purple hover:bg-purple hover:text-white"
+      type="button"
+      aria-label={type === 'plus' ? 'Increase item quantity' : 'Decrease item quantity'}
     >
-      {pending ? (
-        <LoadingDots className="bg-purple" />
-      ) : type === 'plus' ? (
-        <PlusIcon className="h-4 w-4" />
-      ) : (
-        <MinusIcon className="h-4 w-4" />
-      )}
+      <span className="text-lg font-bold text-purple hover:text-white">
+        {type === 'plus' ? '+' : '−'}
+      </span>
     </button>
-  );
-}
-
-export function EditItemQuantityButton({ item, type }: { item: CartItem; type: 'plus' | 'minus' }) {
-  const [message, formAction] = useFormState(updateItemQuantity, null);
-  const payload = {
-    lineId: item.id,
-    variantId: item.merchandise.id,
-    quantity: type === 'plus' ? item.quantity + 1 : item.quantity - 1
-  };
-  const actionWithVariant = formAction.bind(null, payload);
-
-  return (
-    <form action={actionWithVariant}>
-      <SubmitButton type={type} />
-      <p aria-live="polite" className="sr-only" role="status">
-        {message}
-      </p>
-    </form>
   );
 }

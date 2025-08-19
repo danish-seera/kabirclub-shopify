@@ -21,11 +21,11 @@ import { useMediaQuery } from 'react-responsive';
 import { getProducts } from './getProducts';
 
 // types
-import { Product } from '@/lib/shopify/types';
+import { Product } from '@/lib/supabase/types';
 import { Collection } from '.';
 
 // components
-import ProductCard from '../../product/ProductCard';
+import ProductCard from '@/components/layout/ProductCard';
 
 const Slider = ({ collection }: { collection: Collection }) => {
   const isSm = useMediaQuery({ query: '(min-width: 480px)' });

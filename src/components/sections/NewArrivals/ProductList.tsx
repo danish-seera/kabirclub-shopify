@@ -7,100 +7,46 @@ import 'swiper/css/navigation';
 import { A11y, Navigation } from 'swiper/modules';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { useMediaQuery } from '../../../hooks/useMediaQuery';
+import { Product } from '../../../lib/supabase/types';
 import ProductCard from '../../product/ProductCard';
 
 interface ProductListProps {
-  products: Array<{
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    variants: Array<{
-      id: string;
-      name: string;
-      price: number;
-      images: Array<{
-        id: string;
-        imageUrl: string;
-        isPrimary: boolean;
-      }>;
-    }>;
-  }>;
+  products?: Product[];
 }
 
-const ProductList = ({ products }: ProductListProps) => {
+const ProductList = ({ products = [] }: ProductListProps) => {
   const isMobile = useMediaQuery('(max-width: 768px)');
-  const isTablet = useMediaQuery('(max-width: 1024px)');
   const [isStart, setIsStart] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const swiper = useRef<SwiperClass | null>(null);
 
-  const transformedProducts = products.map(product => ({
-    id: product.id,
-    handle: product.id,
-    title: product.title,
-    description: product.description,
-    descriptionHtml: `<p>${product.description}</p>`,
-    priceRange: {
-      minVariantPrice: {
-        amount: product.price.toString(),
-        currencyCode: 'INR'
-      },
-      maxVariantPrice: {
-        amount: product.price.toString(),
-        currencyCode: 'INR'
-      }
-    },
-    variants: product.variants.map(variant => ({
-      id: variant.id,
-      title: variant.name,
-      price: {
-        amount: variant.price.toString(),
-        currencyCode: 'INR'
-      },
-      availableForSale: true,
-      selectedOptions: [],
-      image: {
-        originalSrc: variant.images.find(img => img.isPrimary)?.imageUrl || variant.images[0]?.imageUrl || ''
-      }
-    })),
-    images: product.variants.flatMap(variant => 
-      variant.images.map(image => ({
-        url: image.imageUrl,
-        altText: product.title,
-        width: 900,
-        height: 900
-      }))
-    ),
-    featuredImage: {
-      url: product.variants[0]?.images.find(img => img.isPrimary)?.imageUrl || product.variants[0]?.images[0]?.imageUrl || '',
-      altText: product.title,
-      width: 900,
-      height: 900
-    },
-    availableForSale: true,
-    options: [
-      {
-        id: 'size',
-        name: 'Size',
-        values: product.variants.map(v => v.name)
-      }
-    ],
-    seo: {
-      title: product.title,
-      description: product.description
-    },
-    tags: [],
-    updatedAt: new Date().toISOString()
-  }));
+  // If no products, show empty state
+  if (!products || products.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <p className="text-lg text-gray-500 mb-4">No products available</p>
+        <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#daa520] to-transparent" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full">
       {isMobile ? (
         <div className="grid grid-cols-2 gap-5">
-          {transformedProducts.slice(0, 4).map((product) => (
+          {products.slice(0, 4).map((product) => (
             <div key={product.id} className="p-2">
-              <ProductCard product={product} />
+              {product && product.id ? (
+                <ProductCard product={product} />
+              ) : (
+                <div className="flex flex-col gap-4 p-4 bg-gray-100 rounded-lg">
+                  <div className="aspect-square bg-gray-200 rounded-lg" />
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded" />
+                    <div className="h-3 bg-gray-200 rounded w-3/4" />
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -156,9 +102,21 @@ const ProductList = ({ products }: ProductListProps) => {
             setIsStart(s.isBeginning);
           }}
         >
-          {transformedProducts.map((product) => (
+          {products.map((product) => (
             <SwiperSlide key={product.id} className="!w-[180px] sm:!w-[280px]">
-              <ProductCard product={product} />
+              <div key={product.id}>
+                {product && product.id ? (
+                  <ProductCard product={product} />
+                ) : (
+                  <div className="flex flex-col gap-4 p-4 bg-gray-100 rounded-lg">
+                    <div className="aspect-square bg-gray-200 rounded-lg" />
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-200 rounded" />
+                      <div className="h-3 bg-gray-200 rounded w-3/4" />
+                    </div>
+                  </div>
+                )}
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>

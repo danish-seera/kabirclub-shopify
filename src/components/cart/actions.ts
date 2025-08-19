@@ -1,6 +1,6 @@
 'use server';
 
-import { addToCart, getCart, removeFromCart, updateCartItem } from '@/lib/supabase/api';
+import { addToCart, removeFromCart, updateCartItem } from '@/lib/supabase/api';
 import { cookies } from 'next/headers';
 
 export async function addItem(prevState: any, selectedVariantId: string | undefined) {
@@ -12,7 +12,7 @@ export async function addItem(prevState: any, selectedVariantId: string | undefi
   }
 
   if (!selectedVariantId) {
-    return 'Missing product variant ID';
+    return 'Missing product ID';
   }
 
   try {

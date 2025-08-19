@@ -1,25 +1,28 @@
 'use client';
 
 import ProductCard from '@/components/layout/ProductCard';
-import { getBestSellers } from '@/lib/shopify';
-import { Product } from '@/lib/shopify/types';
+import { getProducts } from '@/lib/supabase/api';
+import { Product } from '@/lib/supabase/types';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
 
-const categories = ['All', 'Shirts', 'Jeans', 'Perfumes'] as const;
+const categories = ['All', 'Topwear', 'Bottomwear', 'Accessories'] as const;
 
 export default function BestSellers() {
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   const fetchProducts = async (category: typeof categories[number]) => {
     try {
       setLoading(true);
-      const data = await getBestSellers(category, 6);
-      setProducts(data);
+      const data = await getProducts({
+        category: category === 'All' ? undefined : category,
+        limit: 6,
+        sortBy: 'created_at',
+        sortOrder: 'desc'
+      });
+      setProducts(data.products);
     } catch (error) {
       console.error('Error fetching best sellers:', error);
       setProducts([]);

@@ -1,35 +1,62 @@
 'use client';
 
-import { Product } from '@/lib/shopify/types';
+import { Product } from '@/lib/supabase/types';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import Price from '../common/price';
 
-export default function ProductCard({ product }: { product: Product }) {
+interface ProductCardProps {
+  product: Product;
+  delay?: number;
+  duration?: number;
+  rank?: number;
+}
+
+export default function ProductCard({ product, delay = 0, duration, rank }: ProductCardProps) {
   return (
-    <Link href={`/product/${product.handle}`}>
-      <div className="group relative flex flex-col gap-4">
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: duration || 0.5, delay }}
+      className="group relative overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl"
+    >
+      {rank && (
+        <div className="absolute left-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-[#daa520] text-sm font-bold text-white">
+          {rank}
+        </div>
+      )}
+      
+      <Link href={`/product/${product.handle}`} className="block">
+        <div className="relative aspect-square overflow-hidden">
           <Image
-            src={product.featuredImage.url}
-            alt={product.featuredImage.altText}
-            width={800}
-            height={800}
-            className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+            src={product.images[0] || '/images/placeholder.png'}
+            alt={product.title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
-          <p className="text-sm text-gray-500">{product.description}</p>
+        
+        <div className="p-4">
+          <h3 className="mb-2 text-lg font-semibold text-gray-800 line-clamp-2">
+            {product.title}
+          </h3>
+          <p className="mb-3 text-sm text-gray-600 line-clamp-2">
+            {product.description}
+          </p>
           <div className="flex items-center justify-between">
-            <span className="text-lg font-bold text-[#daa520]">
-              ₹{product.priceRange.minVariantPrice.amount}
-            </span>
-            <span className="text-sm text-gray-500">
-              {product.variants.length} variants
+            <Price
+              amount={product.price.toString()}
+              currencyCode="INR"
+              className="text-xl font-bold text-[#daa520]"
+            />
+            <span className="text-sm text-gray-500 capitalize">
+              {product.category}
             </span>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 } 

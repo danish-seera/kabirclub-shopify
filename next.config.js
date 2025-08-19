@@ -1,42 +1,60 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
-  eslint: {
-    // Disabling on production builds because we're running checks on PRs via GitHub Actions.
-    ignoreDuringBuilds: true
+const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ['@supabase/supabase-js']
   },
   images: {
-    // unoptimized: true,
-    formats: ['image/avif', 'image/webp'],
+    domains: [
+      'images.unsplash.com',
+      'plus.unsplash.com',
+      'localhost',
+      '127.0.0.1'
+    ],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.shopify.com',
-        pathname: '/s/files/**'
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**'
       },
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com'
+        hostname: 'plus.unsplash.com',
+        port: '',
+        pathname: '/**'
       },
       {
-        protocol: 'https',
-        hostname: 'plus.unsplash.com'
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.ibb.co'
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+        pathname: '/**'
       }
     ]
   },
-  async redirects() {
+  env: {
+    CUSTOM_KEY: process.env.CUSTOM_KEY
+  },
+  async headers() {
     return [
       {
-        source: '/password',
-        destination: '/',
-        permanent: true
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin'
+          }
+        ]
       }
     ];
-  },
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
   }
 };
+
+module.exports = nextConfig;
