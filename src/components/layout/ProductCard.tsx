@@ -21,11 +21,11 @@ export default function ProductCard({ product, delay = 0, duration, rank }: Prod
       transition={{ duration: duration || 0.5, delay }}
       className="group relative overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl"
     >
-      {rank && (
+      {/* {rank && (
         <div className="absolute left-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-[#daa520] text-sm font-bold text-white">
           {rank}
         </div>
-      )}
+      )} */}
       
       <Link href={`/product/${product.handle}`} className="block">
         <div className="relative aspect-square overflow-hidden">
@@ -39,10 +39,10 @@ export default function ProductCard({ product, delay = 0, duration, rank }: Prod
         </div>
         
         <div className="p-4">
-          <h3 className="mb-2 text-lg font-semibold text-gray-800 line-clamp-2">
+          <h3 className="mb-2 text-sm font-semibold text-gray-800 line-clamp-1">
             {product.title}
           </h3>
-          <p className="mb-3 text-sm text-gray-600 line-clamp-2">
+          <p className="mb-3 text-xs text-gray-600 line-clamp-2">
             {product.description}
           </p>
           <div className="mb-3 flex items-center justify-between">
@@ -51,9 +51,9 @@ export default function ProductCard({ product, delay = 0, duration, rank }: Prod
               currencyCode="INR"
               className="text-xl font-bold text-[#daa520]"
             />
-            <span className="text-sm text-gray-500 capitalize">
+            {/* <span className="text-sm text-gray-500 capitalize">
               {product.category}
-            </span>
+            </span> */}
           </div>
         </div>
       </Link>
