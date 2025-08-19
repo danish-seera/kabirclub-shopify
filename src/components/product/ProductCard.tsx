@@ -48,21 +48,21 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         
         <div className="p-4">
-          <h3 className="mb-2 text-lg font-semibold text-gray-800 line-clamp-2">
-            {safeProduct.title}
+          <h3 className="mb-2 text-sm font-semibold text-gray-800 line-clamp-1">
+            {product.title}
           </h3>
-          <p className="mb-3 text-sm text-gray-600 line-clamp-2">
-            {safeProduct.description}
-          </p>
+          {/* <p className="mb-3 text-xs text-gray-600 line-clamp-2">
+            {product.description}
+          </p> */}
           <div className="mb-3 flex items-center justify-between">
             <Price
-              amount={safeProduct.price.toString()}
+              amount={product.price.toString()}
               currencyCode="INR"
               className="text-xl font-bold text-[#daa520]"
             />
-            <span className="text-sm text-gray-500 capitalize">
-              {safeProduct.category}
-            </span>
+            {/* <span className="text-sm text-gray-500 capitalize">
+              {product.category}
+            </span> */}
           </div>
         </div>
       </Link>

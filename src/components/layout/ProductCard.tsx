@@ -42,9 +42,9 @@ export default function ProductCard({ product, delay = 0, duration, rank }: Prod
           <h3 className="mb-2 text-sm font-semibold text-gray-800 line-clamp-1">
             {product.title}
           </h3>
-          <p className="mb-3 text-xs text-gray-600 line-clamp-2">
+          {/* <p className="mb-3 text-xs text-gray-600 line-clamp-2">
             {product.description}
-          </p>
+          </p> */}
           <div className="mb-3 flex items-center justify-between">
             <Price
               amount={product.price.toString()}
