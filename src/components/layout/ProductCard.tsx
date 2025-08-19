@@ -45,7 +45,7 @@ export default function ProductCard({ product, delay = 0, duration, rank }: Prod
           <p className="mb-3 text-sm text-gray-600 line-clamp-2">
             {product.description}
           </p>
-          <div className="flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between">
             <Price
               amount={product.price.toString()}
               currencyCode="INR"

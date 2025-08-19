@@ -1,3 +1,5 @@
+'use client';
+
 import { Product } from '@/lib/supabase/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -27,9 +29,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <Link href={`/product/${safeProduct.handle}`} className="group">
-      <div className="flex flex-col gap-4">
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100">
+    <div className="group relative overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl">
+      <Link href={`/product/${safeProduct.handle}`} className="block">
+        <div className="relative aspect-square overflow-hidden">
           <Image
             src={imageSrc}
             alt={safeProduct.title}
@@ -44,21 +46,26 @@ export default function ProductCard({ product }: ProductCardProps) {
             unoptimized={imageSrc.startsWith('/images/placeholder.png')}
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-lg font-medium text-gray-900">{safeProduct.title}</h3>
-          <p className="text-sm text-gray-500">{safeProduct.description}</p>
-          <div className="flex items-center justify-between">
+        
+        <div className="p-4">
+          <h3 className="mb-2 text-lg font-semibold text-gray-800 line-clamp-2">
+            {safeProduct.title}
+          </h3>
+          <p className="mb-3 text-sm text-gray-600 line-clamp-2">
+            {safeProduct.description}
+          </p>
+          <div className="mb-3 flex items-center justify-between">
             <Price
               amount={safeProduct.price.toString()}
               currencyCode="INR"
-              className="text-lg font-bold text-[#daa520]"
+              className="text-xl font-bold text-[#daa520]"
             />
             <span className="text-sm text-gray-500 capitalize">
               {safeProduct.category}
             </span>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

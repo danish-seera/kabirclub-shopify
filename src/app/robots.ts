@@ -1,15 +1,11 @@
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? 'https://clothing-store.rashidshamloo.com'
-  : 'http://localhost:3000';
-
 export default function robots() {
   return {
     rules: [
       {
-        userAgent: '*'
+        userAgent: '*',
+        allow: '/'
       }
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl
+    sitemap: 'http://localhost:3000/sitemap.xml'
   };
 }

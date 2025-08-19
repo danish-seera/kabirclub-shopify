@@ -3,7 +3,7 @@
 import { addToCart, removeFromCart, updateCartItem } from '@/lib/supabase/api';
 import { cookies } from 'next/headers';
 
-export async function addItem(prevState: any, selectedVariantId: string | undefined) {
+export async function addItem(prevState: any, payload: { productId: string; quantity: number; size: string } | string) {
   let sessionId = cookies().get('sessionId')?.value;
   
   if (!sessionId) {
@@ -11,14 +11,25 @@ export async function addItem(prevState: any, selectedVariantId: string | undefi
     cookies().set('sessionId', sessionId);
   }
 
-  if (!selectedVariantId) {
+  // Handle both old string format and new object format
+  let productId: string;
+  let quantity: number = 1;
+
+  if (typeof payload === 'string') {
+    productId = payload;
+  } else {
+    productId = payload.productId;
+    quantity = payload.quantity;
+  }
+
+  if (!productId) {
     return 'Missing product ID';
   }
 
   try {
     await addToCart({
-      productId: selectedVariantId,
-      quantity: 1,
+      productId,
+      quantity,
       sessionId
     });
   } catch (e) {
