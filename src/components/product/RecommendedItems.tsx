@@ -14,7 +14,7 @@ const RecommendedItems = async ({ productId }: { productId: string }) => {
         </h2>
         <div className="grid w-full grid-cols-2 items-start justify-center gap-x-[4px] gap-y-[16px] xs:gap-x-[16px] md:gap-[32px] lg:grid-cols-3">
           {products.map((product: any, i: any) => (
-            <ProductCard key={i} product={product} delay={i * 0.5} />
+            <ProductCard key={i} product={product} />
           ))}
         </div>
       </div>

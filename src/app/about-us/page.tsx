@@ -29,7 +29,7 @@ export default function AboutUsPage() {
                 </p>
                 
                 <p className="leading-relaxed">
-                  What began as a passion project quickly evolved into a premier destination for men's fashion. Today, we pride ourselves on curating collections that help men express themselves through their unique style.
+                  What began as a passion project quickly evolved into a premier destination for men&apos;s fashion. Today, we pride ourselves on curating collections that help men express themselves through their unique style.
                 </p>
                 
                 <div className="mt-4 flex items-center">
@@ -97,7 +97,7 @@ export default function AboutUsPage() {
                 </svg>
               </div>
               <h3 className="mb-2 text-xl font-semibold text-[#daa520]">Value</h3>
-              <p className="text-gray-400">We believe premium fashion shouldn't come with a premium price tag.</p>
+              <p className="text-gray-400">We believe premium fashion shouldn&apos;t come with a premium price tag.</p>
             </div>
           </div>
         </div>

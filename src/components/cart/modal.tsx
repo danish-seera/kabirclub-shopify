@@ -1,7 +1,6 @@
 'use client';
 
 import Price from '@/components/common/price';
-import { DEFAULT_OPTION } from '@/lib/constants';
 import type { Cart } from '@/lib/supabase/types';
 import { createUrl } from '@/lib/utils';
 import { Dialog, Transition } from '@headlessui/react';
@@ -87,11 +86,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                     {cart.lines.map((item, i) => {
                       const merchandiseSearchParams = {} as MerchandiseSearchParams;
 
-                      item.merchandise.selectedOptions.forEach(({ name, value }) => {
-                        if (value !== DEFAULT_OPTION) {
-                          merchandiseSearchParams[name.toLowerCase()] = value;
-                        }
-                      });
+                      // No variants in Supabase, so no search params needed
 
                       const merchandiseUrl = createUrl(
                         `/product/${item.merchandise.product.handle}`,
@@ -125,11 +120,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                                 <span className="font-lora text-base font-bold leading-tight">
                                   {item.merchandise.product.title}
                                 </span>
-                                {item.merchandise.title !== DEFAULT_OPTION ? (
-                                  <p className="text-sm font-bold text-purple">
-                                    {item.merchandise.title}
-                                  </p>
-                                ) : null}
+                                {/* No variants in Supabase */}
                               </div>
                             </Link>
                             <div className="flex h-16 flex-col justify-between">

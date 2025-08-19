@@ -114,3 +114,18 @@ export const SITE_SHIPPING = {
   STANDARD_COST: 200,
   EXPRESS_COST: 400
 };
+
+// Filter and sort types
+export interface SortFilterItem {
+  title: string;
+  slug: string | null;
+  sortKey: string;
+  reverse: boolean;
+}
+
+export const SORT_FILTER_ITEMS: SortFilterItem[] = [
+  { title: 'Latest', slug: 'latest', sortKey: 'created_at', reverse: true },
+  { title: 'Oldest', slug: 'oldest', sortKey: 'created_at', reverse: false },
+  { title: 'Price: Low to High', slug: 'price-low-high', sortKey: 'price', reverse: false },
+  { title: 'Price: High to Low', slug: 'price-high-low', sortKey: 'price', reverse: true }
+];

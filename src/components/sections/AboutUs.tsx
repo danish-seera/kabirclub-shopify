@@ -10,19 +10,19 @@ const AboutUs = () => {
       
       <div className="relative mx-auto max-w-[95%] md:max-w-[800px]">
         {/* Decorative quotes */}
-        <div className="absolute -left-4 -top-4 text-6xl text-[#daa520]/20 md:-left-8 md:-top-8 md:text-8xl">"</div>
-        <div className="absolute -bottom-4 -right-4 text-6xl text-[#daa520]/20 md:-bottom-8 md:-right-8 md:text-8xl">"</div>
+        <div className="absolute -left-4 -top-4 text-6xl text-[#daa520]/20 md:-left-8 md:-top-8 md:text-8xl">&ldquo;</div>
+        <div className="absolute -bottom-4 -right-4 text-6xl text-[#daa520]/20 md:-bottom-8 md:-right-8 md:text-8xl">&rdquo;</div>
         
         <div className="flex flex-col items-center justify-center gap-8 rounded-lg border border-[#daa520]/20 bg-black/60 p-8 text-center backdrop-blur-sm md:p-12">
           {/* Gold line above heading */}
           <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-[#daa520] to-transparent"></div>
           
           <h3 className="font-lora text-[clamp(28px,18px_+_2vw,40px)] font-semibold text-[#daa520]">
-            Premium Men's Fashion Destination
+            Premium Men&apos;s Fashion Destination
           </h3>
           
           <p className="max-w-[90%] font-lora text-[clamp(18px,14px_+_1vw,22px)] font-medium leading-relaxed text-gray-300 md:max-w-none md:leading-normal">
-            At Kabirclub, we offer a handpicked collection of high-quality men's clothing - from stylish t-shirts and shirts to perfectly fitted jeans. Every piece is crafted with attention to detail, ensuring both comfort and style for the modern man.
+            At Kabirclub, we offer a handpicked collection of high-quality men&apos;s clothing - from stylish t-shirts and shirts to perfectly fitted jeans. Every piece is crafted with attention to detail, ensuring both comfort and style for the modern man.
           </p>
           
           {/* Gold line below text */}

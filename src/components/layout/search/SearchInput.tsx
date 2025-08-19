@@ -1,23 +1,29 @@
 'use client';
 
-import { useDebounce } from '@/lib/hooks/use-debounce';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export default function SearchInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const debouncedSearch = useDebounce((value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) {
-      params.set('q', value);
-    } else {
-      params.delete('q');
+  const debouncedSearch = useCallback((value: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
-    router.push(`/search?${params.toString()}`);
-  }, 300);
+
+    timeoutRef.current = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value) {
+        params.set('q', value);
+      } else {
+        params.delete('q');
+      }
+      router.push(`/search?${params.toString()}`);
+    }, 300);
+  }, [searchParams, router]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

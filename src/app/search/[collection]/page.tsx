@@ -17,9 +17,8 @@ export async function generateMetadata({
   if (!collection) return notFound();
 
   return {
-    title: collection.seo?.title || collection.title,
-    description:
-      collection.seo?.description || collection.description || `${collection.title} products`
+    title: collection.title,
+    description: collection.description || `${collection.title} products`
   };
 }
 

@@ -68,22 +68,24 @@ const checkSupabase = () => {
 
 // Helper function to convert Supabase cart items to Cart format
 const convertCartItemsToCart = (cartItems: CartItem[], sessionId: string): Cart => {
-  const lines: CartLine[] = cartItems.map(item => ({
-    id: item.id,
-    quantity: item.quantity,
-    merchandise: {
-      id: item.product_id,
-      title: item.products?.title || 'Unknown Product',
-      product: item.products || fallbackProducts[0],
-      selectedOptions: []
-    },
-    cost: {
-      totalAmount: {
-        amount: (item.products?.price || 0).toString(),
-        currencyCode: 'INR'
+  const lines: CartLine[] = cartItems
+    .filter(item => item.products) // Only include items with valid products
+    .map(item => ({
+      id: item.id,
+      quantity: item.quantity,
+      merchandise: {
+        id: item.product_id,
+        title: item.products!.title,
+        product: item.products!,
+        selectedOptions: []
+      },
+      cost: {
+        totalAmount: {
+          amount: item.products!.price.toString(),
+          currencyCode: 'INR'
+        }
       }
-    }
-  }));
+    }));
 
   const totalQuantity = lines.reduce((sum, line) => sum + line.quantity, 0);
   const subtotalAmount = lines.reduce((sum, line) => sum + (line.merchandise.product.price * line.quantity), 0);
@@ -155,9 +157,9 @@ export async function getProducts({
   }
 
   const offset = page * limit;
-  const { data, error, count } = await queryBuilder
+  const { data, error } = await queryBuilder
     .range(offset, offset + limit - 1)
-    .select('*', { count: 'exact' });
+    .select('*');
 
   if (error) {
     console.error('Error fetching products:', error);
@@ -166,7 +168,7 @@ export async function getProducts({
 
   // Check if database has invalid URLs and fallback to local data
   const hasInvalidUrls = data?.some(product => 
-    product.images?.some(img => img.includes('example.com'))
+    product.images?.some((img: string) => img.includes('example.com'))
   );
 
   if (hasInvalidUrls) {
@@ -192,7 +194,7 @@ export async function getProducts({
 
   return {
     products: data || [],
-    total: count || 0
+    total: data?.length || 0
   };
 }
 
@@ -458,7 +460,7 @@ export async function clearCart(sessionId: string): Promise<boolean> {
 }
 
 // Pages API (for dynamic pages)
-export async function getPage(_handle: string): Promise<Page | null> {
+export async function getPage(): Promise<Page | null> {
   if (!checkSupabase()) {
     // Return fallback page data
     return {
@@ -484,7 +486,7 @@ export async function getPage(_handle: string): Promise<Page | null> {
 }
 
 // Menu API (for navigation)
-export async function getMenu(_handle: string): Promise<any[]> {
+export async function getMenu(): Promise<any[]> {
   if (!checkSupabase()) {
     // Return fallback menu data
     return [
