@@ -1,6 +1,7 @@
 import Cart from '@/components/cart';
 import LogoNew from '@/components/layout/LogoNew';
 import Link from 'next/link';
+import UserProfile from './UserProfile';
 
 // next
 
@@ -21,8 +22,9 @@ const Header = async () => {
         </Link>
       </div>
       
-      {/* Cart Component - Right Side */}
-      <div className="flex items-center">
+      {/* Right Side - Cart & User Profile */}
+      <div className="flex items-center gap-4">
+        <UserProfile />
         <Cart />
       </div>
     </header>
