@@ -97,7 +97,7 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
         <div className="flex items-center gap-4">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors flex items-center justify-center font-bold text-lg"
           >
             -
           </button>
@@ -105,12 +105,12 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
             {quantity}
           </span>
           <button
-            onClick={() => setQuantity(Math.min(10, quantity + 1))}
-            className="w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors flex items-center justify-center"
+            onClick={() => setQuantity(quantity + 1)}
+            className="w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors flex items-center justify-center font-bold text-lg"
           >
+            +
           </button>
         </div>
-        <p className="text-gray-400 text-sm mt-2">Maximum 10 items per order</p>
       </div>
 
       {/* Total Price */}
@@ -152,52 +152,6 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
           <p className="text-green-300 text-center">✅ Added to cart successfully!</p>
         </div>
       )}
-
-      {/* Product Details */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-white mb-3 border-b border-gray-700 pb-2">
-          Product Details
-        </h3>
-        <div className="space-y-2 text-gray-300">
-          <div className="flex justify-between">
-            <span>Category:</span>
-            <span className="text-white">{product.category}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Product ID:</span>
-            <span className="text-white font-mono text-sm">{product.id}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Added:</span>
-            <span className="text-white">
-              {new Date(product.created_at).toLocaleDateString('en-IN')}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span>Last Updated:</span>
-            <span className="text-white">
-              {new Date(product.updated_at).toLocaleDateString('en-IN')}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Features */}
-      <div>
-        <h3 className="text-lg font-semibold text-white mb-3 border-b border-gray-700 pb-2">
-          Features
-        </h3>
-        <div className="space-y-2">
-          {['Premium Quality', 'Free Shipping', 'Easy Returns', '24/7 Support'].map((feature) => (
-            <div key={feature} className="flex items-center gap-3 text-gray-300">
-              <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              <span>{feature}</span>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
