@@ -9,23 +9,21 @@ import UserProfile from './UserProfile';
 
 const Header = async () => {
   return (
-    <header className="flex w-full items-center justify-between border-b border-purple bg-black h-28 px-6 relative">
+    <header className="flex w-full items-center justify-between border-b border-gray-800 bg-black h-20 md:h-28 px-4 md:px-6 relative">
       <h1 className="sr-only">KabirClub</h1>
       
-      {/* Empty div for left side balance */}
-      <div className="w-12"></div>
-      
-      {/* Logo - Center */}
-      <div className="absolute left-1/2 transform -translate-x-1/2">
-        <Link href="/" title="Home">
-          <LogoNew size="sm" className="h-10" />
+      {/* Logo - Left on mobile, Center on desktop */}
+      <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+        <Link href="/" title="Home" className="block">
+          <LogoNew size="sm" className="h-8 md:h-10" />
         </Link>
       </div>
       
-      {/* Right Side - Cart & User Profile */}
-      <div className="flex items-center gap-4">
-        <UserProfile />
+      {/* Right Side - User Profile & Cart */}
+      <div className="flex items-center gap-3 md:gap-1">
         <Cart />
+        <UserProfile />
+        
       </div>
     </header>
   );

@@ -15,23 +15,24 @@ export default function UserProfile() {
 
   if (!isAuthenticated()) {
     return (
-      <div className="flex items-center gap-4">
+      <div className="flex items-center">
         <Link
           href="/login"
-          className="text-gray-300 hover:text-[#daa520] transition-colors duration-200"
+          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800 hover:bg-[#daa520] transition-all duration-300 group"
           title="Login"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </Link>
-        <Link
-          href="/signup"
-          className="text-gray-300 hover:text-[#daa520] transition-colors duration-200"
-          title="Sign Up"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+          <svg 
+            className="w-4 h-4 md:w-5 md:h-5 text-gray-300 group-hover:text-black transition-colors duration-300" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+            />
           </svg>
         </Link>
       </div>
@@ -44,10 +45,10 @@ export default function UserProfile() {
         onClick={() => setShowDropdown(!showDropdown)}
         className="flex items-center gap-2 text-white hover:text-[#daa520] transition-colors duration-200"
       >
-        <div className="w-8 h-8 bg-[#daa520] rounded-full flex items-center justify-center text-black font-bold text-sm">
+        <div className="w-6 h-6 bg-[#daa520] rounded-full flex items-center justify-center text-black font-bold text-xs">
           {user?.name?.charAt(0)?.toUpperCase() || 'U'}
         </div>
-        <span className="text-sm font-medium hidden md:block">{user?.name}</span>
+        {/* <span className="text-sm font-medium hidden md:block">{user?.name}</span>
         <svg
           className={`w-4 h-4 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}
           fill="none"
@@ -55,7 +56,7 @@ export default function UserProfile() {
           viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        </svg> */}
       </button>
 
       {/* Dropdown Menu */}
