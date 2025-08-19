@@ -18,7 +18,7 @@ const NewArrivals = async () => {
     
     return (
       <section className="flex w-full items-center justify-center bg-black pb-[48px] pt-[24px] md:pt-[48px]">
-        <div className="flex flex-col items-center justify-center gap-[24px] w-full px-5 md:w-[904px] md:gap-[48px]">
+        <div className="flex flex-col items-center justify-center gap-[24px] w-full px-2 md:w-[904px] md:gap-[48px]">
           <h2 className="w-full text-center font-lora text-[clamp(28px,20px_+_2vw,40px)] font-medium text-[#D4AF37] md:text-left">
             New Arrivals
           </h2>
@@ -34,7 +34,7 @@ const NewArrivals = async () => {
     // Return fallback UI if there's an error
     return (
       <section className="flex w-full items-center justify-center bg-black pb-[48px] pt-[24px] md:pt-[48px]">
-        <div className="flex flex-col items-center justify-center gap-[24px] w-full px-5 md:w-[904px] md:gap-[48px]">
+        <div className="flex flex-col items-center justify-center gap-[4px] w-full px-1 md:w-[104px] md:gap-[18px]">
           <h2 className="w-full text-center font-lora text-[clamp(28px,20px_+_2vw,40px)] font-medium text-[#D4AF37] md:text-left">
             New Arrivals
           </h2>

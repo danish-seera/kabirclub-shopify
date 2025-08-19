@@ -33,7 +33,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
   return (
     <div className="relative w-full">
       {isMobile ? (
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-2 gap-1">
           {products.slice(0, 4).map((product) => (
             <div key={product.id} className="p-2">
               {product && product.id ? (

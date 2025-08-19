@@ -39,7 +39,7 @@ export default function ProductCard({ product, delay = 0, duration, rank }: Prod
         </div>
         
         <div className="p-4">
-          <h3 className="mb-2 text-sm font-semibold text-gray-800 line-clamp-1">
+          <h3 className="mb-2 text-m font-semibold text-gray-800 line-clamp-1">
             {product.title}
           </h3>
           {/* <p className="mb-3 text-xs text-gray-600 line-clamp-2">
@@ -49,7 +49,7 @@ export default function ProductCard({ product, delay = 0, duration, rank }: Prod
             <Price
               amount={product.price.toString()}
               currencyCode="INR"
-              className="text-xl font-bold text-[#daa520]"
+              className="text-l font-bold text-[#daa520]"
             />
             {/* <span className="text-sm text-gray-500 capitalize">
               {product.category}
