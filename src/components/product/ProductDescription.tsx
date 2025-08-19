@@ -95,7 +95,7 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
               key={size}
               onClick={() => setSelectedSize(size)}
               className={`
-                px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium
+                px-4 py-2 rounded-lg border-2 transition-all duration-200 text-sm items-center flex justify-center
                 ${selectedSize === size
                   ? 'border-[#daa520] text-[#daa520]'
                   : 'border-gray-600 text-gray-300 hover:border-[#daa520] hover:text-[#daa520]'
