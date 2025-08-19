@@ -20,10 +20,9 @@ const Header = async () => {
       </div>
       
       {/* Right Side - User Profile & Cart */}
-      <div className="flex items-center gap-3 md:gap-1">
+      <div className="flex items-center gap-3 md:gap-1 ml-auto">
         <Cart />
         <UserProfile />
-        
       </div>
     </header>
   );
