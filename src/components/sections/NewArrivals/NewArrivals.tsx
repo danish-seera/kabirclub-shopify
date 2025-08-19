@@ -1,11 +1,16 @@
-// shopify
+// supabase
+import { getProducts } from '@/lib/supabase/api';
 
 // components
 import ProductList from './ProductList';
 
 const NewArrivals = async () => {
-  const response = await fetch('https://backend-production-909b.up.railway.app/api/products?sortBy=createdAt&sortOrder=desc&page=0&limit=6');
-  const { products } = await response.json();
+  const { products } = await getProducts({
+    sortBy: 'created_at',
+    sortOrder: 'desc',
+    page: 0,
+    limit: 6
+  });
   
   return (
     <section className="flex w-full items-center justify-center bg-black pb-[48px] pt-[24px] md:pt-[48px]">

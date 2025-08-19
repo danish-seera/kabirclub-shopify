@@ -1,13 +1,13 @@
-import { getCart } from '@/lib/shopify';
+import { getCart } from '@/lib/supabase/api';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
 
 export default async function Cart() {
-  const cartId = cookies().get('cartId')?.value;
+  const sessionId = cookies().get('sessionId')?.value;
   let cart;
 
-  if (cartId) {
-    cart = await getCart(cartId);
+  if (sessionId) {
+    cart = await getCart(sessionId);
   }
 
   return <CartModal cart={cart} />;

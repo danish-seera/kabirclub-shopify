@@ -2,7 +2,7 @@ import Grid from '@/components/grid';
 import ProductGridItems from '@/components/layout/product-grid-items';
 import FilterList from '@/components/layout/search/filter';
 import SearchInput from '@/components/layout/search/SearchInput';
-import { getProducts } from '@/lib/api/product';
+import { getProducts } from '@/lib/supabase/api';
 
 // export const runtime = 'edge';
 
@@ -19,14 +19,14 @@ export default async function SearchPage({
   const { sort, q: searchValue, category } = searchParams as { [key: string]: string };
 
   // Parse sort parameter
-  let sortBy = 'price';
-  let sortOrder = 'asc';
+  let sortBy = 'created_at';
+  let sortOrder = 'desc';
 
   if (sort) {
     const [sortField, order] = sort.split('-');
-    if (sortField === 'price' || sortField === 'createdAt') {
-      sortBy = sortField;
-      sortOrder = order || 'asc';
+    if (sortField === 'price' || sortField === 'created_at') {
+      sortBy = sortField === 'created_at' ? 'created_at' : 'price';
+      sortOrder = order || 'desc';
     }
   }
 
@@ -92,8 +92,8 @@ export default async function SearchPage({
                 list={[
                   { title: 'Price: Low to High', slug: 'price-asc' },
                   { title: 'Price: High to Low', slug: 'price-desc' },
-                  { title: 'Latest', slug: 'createdAt-desc' },
-                  { title: 'Oldest', slug: 'createdAt-asc' }
+                  { title: 'Latest', slug: 'created_at-desc' },
+                  { title: 'Oldest', slug: 'created_at-asc' }
                 ]}
               />
             </div>

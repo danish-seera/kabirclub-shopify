@@ -1,5 +1,5 @@
-// shopify
-import { getProductRecommendations } from '@/lib/shopify';
+// supabase
+import { getProductRecommendations } from '@/lib/supabase/api';
 
 // components
 import ProductCard from '@/components/product/ProductCard';

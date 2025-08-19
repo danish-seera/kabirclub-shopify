@@ -1,10 +1,9 @@
-import { getCollection, getCollectionProducts } from '@/lib/shopify';
+import { getCollection, getCollectionProducts } from '@/lib/supabase/api';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import Grid from '@/components/grid';
 import ProductGridItems from '@/components/layout/product-grid-items';
-import { defaultSort, sorting } from '@/lib/constants';
 
 export const runtime = 'edge';
 
@@ -32,8 +31,23 @@ export default async function CategoryPage({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const { sort } = searchParams as { [key: string]: string };
-  const { sortKey, reverse } = sorting.find((item) => item.slug === sort) || defaultSort;
-  const products = await getCollectionProducts({ collection: params.collection, sortKey, reverse });
+  
+  let sortBy = 'created_at';
+  let sortOrder = 'desc';
+  
+  if (sort) {
+    const [sortField, order] = sort.split('-');
+    if (sortField === 'price' || sortField === 'created_at') {
+      sortBy = sortField === 'created_at' ? 'created_at' : 'price';
+      sortOrder = order || 'desc';
+    }
+  }
+  
+  const products = await getCollectionProducts({ 
+    collection: params.collection, 
+    sortBy, 
+    sortOrder: sortOrder as 'asc' | 'desc' 
+  });
 
   return (
     <section>

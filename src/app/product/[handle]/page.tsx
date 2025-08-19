@@ -6,9 +6,8 @@ import { notFound } from 'next/navigation';
 // react
 import { Suspense } from 'react';
 
-// shopify
-import { HIDDEN_PRODUCT_TAG } from '@/lib/constants';
-import { getProduct } from '@/lib/shopify';
+// supabase
+import { getProduct } from '@/lib/supabase/api';
 
 // components
 // import { ProductDescription } from '@/components/product/product-description';
@@ -17,7 +16,7 @@ import ProductSlider from '@/components/product/ProductSlider';
 import RecommendedItems from '@/components/product/RecommendedItems';
 
 // types
-// import { Image } from '@/lib/shopify/types';
+// import { Image } from '@/lib/supabase/types';
 
 export const runtime = 'edge';
 
@@ -30,12 +29,11 @@ export async function generateMetadata({
 
   if (!product) return notFound();
 
-  const { url, width, height, altText: alt } = product.featuredImage || {};
-  const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG as never);
+  const indexable = true; // Remove HIDDEN_PRODUCT_TAG check for now
 
   return {
-    title: product.seo.title || product.title,
-    description: product.seo.description || product.description,
+    title: product.title,
+    description: product.description,
     robots: {
       index: indexable,
       follow: indexable,
@@ -43,19 +41,7 @@ export async function generateMetadata({
         index: indexable,
         follow: indexable
       }
-    },
-    // openGraph: url
-    //   ? {
-    //       images: [
-    //         {
-    //           url,
-    //           width,
-    //           height,
-    //           alt
-    //         }
-    //       ]
-    //     }
-    //   : null
+    }
   };
 }
 
@@ -69,15 +55,13 @@ const ProductPage = async ({ params }: { params: { handle: string } }) => {
     '@type': 'Product',
     name: product.title,
     description: product.description,
-    image: product.featuredImage.url,
+    image: product.images?.[0] || '',
     offers: {
       '@type': 'AggregateOffer',
-      availability: product.availableForSale
-        ? 'https://schema.org/InStock'
-        : 'https://schema.org/OutOfStock',
-      priceCurrency: product.priceRange.minVariantPrice.currencyCode,
-      highPrice: product.priceRange.maxVariantPrice.amount,
-      lowPrice: product.priceRange.minVariantPrice.amount
+      availability: 'https://schema.org/InStock',
+      priceCurrency: 'INR',
+      highPrice: product.price.toString(),
+      lowPrice: product.price.toString()
     }
   };
 
