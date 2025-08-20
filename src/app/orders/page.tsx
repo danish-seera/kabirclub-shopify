@@ -1,22 +1,20 @@
 'use client';
 
+import { useAuth } from '@/hooks/useAuth';
 import { getOrders } from '@/lib/supabase/api';
 import { Order } from '@/lib/supabase/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function OrdersPage() {
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -35,7 +33,15 @@ export default function OrdersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push('/login');
+      return;
+    }
+    fetchOrders();
+  }, [isAuthenticated, router, fetchOrders]);
 
   const getSessionId = () => {
     const cookies = document.cookie.split(';');
@@ -133,7 +139,7 @@ export default function OrdersPage() {
           <div className="text-center">
             <div className="text-6xl mb-4">📦</div>
             <h1 className="text-3xl font-bold text-[#daa520] mb-4">No Orders Yet</h1>
-            <p className="text-gray-400 mb-6">You haven't placed any orders yet. Start shopping to see your orders here!</p>
+            <p className="text-gray-400 mb-6">You haven&apos;t placed any orders yet. Start shopping to see your orders here!</p>
             <button
               onClick={() => router.push('/')}
               className="bg-[#daa520] text-black px-6 py-3 rounded-lg font-semibold hover:bg-[#b38a1d]"

@@ -10,10 +10,9 @@ interface ProductCardProps {
   product: Product;
   delay?: number;
   duration?: number;
-  rank?: number;
 }
 
-export default function ProductCard({ product, delay = 0, duration, rank }: ProductCardProps) {
+export default function ProductCard({ product, delay = 0, duration }: ProductCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

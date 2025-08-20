@@ -2,15 +2,13 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import { getCart } from '@/lib/supabase/api';
-import { Cart } from '@/lib/supabase/types';
-import { useRouter } from 'next/navigation';
+import { Cart as CartType } from '@/lib/supabase/types';
 import { useEffect, useState } from 'react';
 import CartModal from './modal';
 
 export default function Cart() {
   const { isAuthenticated, isLoading, user } = useAuth();
-  const router = useRouter();
-  const [cart, setCart] = useState<Cart | null>(null);
+  const [cart, setCart] = useState<CartType | null>(null);
   const [sessionId, setSessionId] = useState('');
 
   useEffect(() => {

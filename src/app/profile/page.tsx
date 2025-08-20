@@ -5,13 +5,12 @@ import { getOrders } from '@/lib/supabase/api';
 import { Order } from '@/lib/supabase/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function ProfilePage() {
   const { user, logout, isAuthenticated } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
@@ -19,17 +18,8 @@ export default function ProfilePage() {
     phone: user?.phone || ''
   });
 
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push('/login');
-      return;
-    }
-    fetchOrders();
-  }, [isAuthenticated, router]);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
-      setIsLoading(true);
       const sessionId = getSessionId();
       if (sessionId) {
         const ordersData = await getOrders(sessionId);
@@ -37,10 +27,16 @@ export default function ProfilePage() {
       }
     } catch (error) {
       console.error('Error fetching orders:', error);
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push('/login');
+      return;
+    }
+    fetchOrders();
+  }, [isAuthenticated, router, fetchOrders]);
 
   const getSessionId = () => {
     const cookies = document.cookie.split(';');
