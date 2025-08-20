@@ -9,7 +9,6 @@ import CartModal from './modal';
 export default function Cart() {
   const { isAuthenticated, isLoading, user } = useAuth();
   const [cart, setCart] = useState<CartType | null>(null);
-  const [sessionId, setSessionId] = useState('');
 
   const fetchCart = useCallback(async (sid: string) => {
     try {
@@ -34,7 +33,6 @@ export default function Cart() {
     };
 
     const currentSessionId = getSessionId();
-    setSessionId(currentSessionId || '');
 
     if (currentSessionId) {
       fetchCart(currentSessionId);  // Always fetch cart if sessionId exists
@@ -45,7 +43,6 @@ export default function Cart() {
   useEffect(() => {
     if (!isAuthenticated() || !user) {
       setCart(null);
-      setSessionId('');
     }
   }, [isAuthenticated, user]);
 
@@ -77,7 +74,6 @@ export default function Cart() {
   useEffect(() => {
     const handleUserLogout = () => {
       setCart(null);
-      setSessionId('');
     };
 
     window.addEventListener('userLogout', handleUserLogout);

@@ -3,6 +3,7 @@
 import Cart from '@/components/cart';
 import { useAuth } from '@/hooks/useAuth';
 import UserProfile from './UserProfile';
+import Image from 'next/image';
 
 export default function Header() {
   const { isLoading } = useAuth();
@@ -14,9 +15,11 @@ export default function Header() {
         <h1 className="sr-only">KabirClub</h1>
         <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
           <a title="Home" className="block" href="/">
-            <img 
+            <Image 
               alt="logo" 
               src="/images/logo2.png" 
+              width={150}
+              height={52}
               className="w-auto max-w-none h-8 md:h-10 h-[40px] xl:h-[52px]"
             />
           </a>
@@ -36,9 +39,11 @@ export default function Header() {
       <h1 className="sr-only">KabirClub</h1>
       <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
         <a title="Home" className="block" href="/">
-          <img 
+          <Image 
             alt="logo" 
             src="/images/logo2.png" 
+            width={150}
+            height={52}
             className="w-auto max-w-none h-8 md:h-10 h-[40px] xl:h-[52px]"
           />
         </a>
