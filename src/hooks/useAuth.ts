@@ -13,15 +13,42 @@ export function useAuth() {
 
   useEffect(() => {
     // Check if user is logged in on component mount
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    const userEmail = localStorage.getItem('userEmail');
-    const userName = localStorage.getItem('userName');
+    const checkAuthStatus = () => {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userEmail = localStorage.getItem('userEmail');
+      const userName = localStorage.getItem('userName');
 
-    if (isLoggedIn === 'true' && userEmail && userName) {
-      setUser({ email: userEmail, name: userName });
-    }
+      if (isLoggedIn === 'true' && userEmail && userName) {
+        setUser({ email: userEmail, name: userName });
+      } else {
+        setUser(null);
+      }
+      
+      setIsLoading(false);
+    };
+
+    checkAuthStatus();
+
+    // Listen for storage changes (when user logs in/out in another tab)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'isLoggedIn' || e.key === 'userEmail' || e.key === 'userName') {
+        checkAuthStatus();
+      }
+    };
+
+    // Listen for custom logout events
+    const handleLogoutEvent = () => {
+      setUser(null);
+      setIsLoading(false);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('userLogout', handleLogoutEvent);
     
-    setIsLoading(false);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('userLogout', handleLogoutEvent);
+    };
   }, []);
 
   const login = (email: string, name: string) => {
@@ -36,10 +63,20 @@ export function useAuth() {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
     setUser(null);
+    
+    // Dispatch custom event for immediate state sync
+    window.dispatchEvent(new CustomEvent('userLogout'));
   };
 
   const isAuthenticated = () => {
-    return user !== null;
+    // Check both state and localStorage for immediate response
+    if (user) return true;
+    
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userEmail = localStorage.getItem('userEmail');
+    const userName = localStorage.getItem('userName');
+    
+    return isLoggedIn === 'true' && userEmail && userName;
   };
 
   return {

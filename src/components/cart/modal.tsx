@@ -15,7 +15,7 @@ type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
-export default function CartModal({ cart }: { cart: Cart | undefined }) {
+export default function CartModal({ cart, onCartClick }: { cart: Cart | undefined; onCartClick?: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
   const closeCart = () => setIsOpen(false);
@@ -33,11 +33,19 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
     }
   }, [isOpen, cart?.totalQuantity, quantityRef]);
 
+  const handleCartButtonClick = () => {
+    if (onCartClick) {
+      onCartClick();
+    } else {
+      setIsOpen(true);
+    }
+  };
+
   return (
     <>
       <button
         aria-label="Open cart"
-        onClick={() => setIsOpen(true)}
+        onClick={handleCartButtonClick}
         className="header-link ml-0 [&>*]:transition-all [&>*]:duration-300 hover:[&>*]:opacity-50 relative"
       >
         <div className="relative">
@@ -162,7 +170,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-purple pb-1 pt-1">
                       <p>Shipping</p>
-                      <p className="text-right">Calculated at checkout</p>
+                      <p className="text-right">Free</p>
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-purple pb-1 pt-1">
                       <p>Total</p>
@@ -173,9 +181,22 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                       />
                     </div>
                   </div>
-                  <a href={cart.checkoutUrl} className="btn-dark text-center">
+                  <Link 
+                    href="/checkout" 
+                    onClick={closeCart}
+                    className="btn-dark text-center block"
+                  >
                     Proceed to Checkout
-                  </a>
+                  </Link>
+                  
+                  {/* Orders Link */}
+                  <Link 
+                    href="/orders" 
+                    onClick={closeCart}
+                    className="mt-3 text-center text-sm text-gray-400 hover:text-[#daa520] transition-colors duration-200 underline"
+                  >
+                    View My Orders
+                  </Link>
                 </div>
               )}
             </Dialog.Panel>

@@ -109,3 +109,47 @@ export interface CollectionsResponse {
   collections: Collection[];
   total: number;
 }
+
+export interface Order {
+  id: string;
+  userId?: string;
+  sessionId: string;
+  items: OrderItem[];
+  shippingAddress: ShippingAddress;
+  paymentMethod: 'cash_on_delivery' | 'upi';
+  upiId?: string;
+  paymentStatus: 'pending' | 'paid' | 'failed';
+  orderStatus: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+  subtotal: number;
+  shippingCost: number;
+  totalAmount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OrderItem {
+  id: string;
+  productId: string;
+  product: Product;
+  quantity: number;
+  size: string;
+  price: number;
+  totalPrice: number;
+}
+
+export interface ShippingAddress {
+  fullName: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
+export interface CheckoutData {
+  items: CartItem[];
+  shippingAddress: ShippingAddress;
+  paymentMethod: 'cash_on_delivery' | 'upi';
+}

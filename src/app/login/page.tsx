@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -9,28 +10,59 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setSuccess('');
 
     try {
-      // TODO: Implement actual authentication logic
-      // For now, simulate login with basic validation
-      if (email && password) {
-        // Store user session (you can use localStorage, cookies, or state management)
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', email);
-        
-        // Redirect to home page or previous page
-        router.push('/');
-      } else {
+      // Basic validation
+      if (!email || !password) {
         setError('Please fill in all fields');
+        return;
+      }
+
+      // Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setError('Please enter a valid email address');
+        return;
+      }
+
+      // Password validation (minimum 6 characters)
+      if (password.length < 6) {
+        setError('Password must be at least 6 characters long');
+        return;
+      }
+
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // For demo purposes, accept any valid email/password combination
+      // In production, this would be an actual API call to your backend
+      if (email && password) {
+        // Extract name from email (first part before @)
+        const name = email.split('@')[0] || 'User';
+        
+        // Use the useAuth hook to login
+        login(email, name);
+        
+        // Show success message briefly
+        setSuccess('Login successful! Redirecting...');
+        
+        // Redirect to home page after a brief delay
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
       }
     } catch (err) {
       setError('Login failed. Please try again.');
+      console.error('Login error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -53,6 +85,11 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
+            {success && (
+              <div className="bg-green-900/20 border border-green-800 text-green-400 px-4 py-3 rounded-lg text-sm">
+                {success}
+              </div>
+            )}
 
             {/* Email Field */}
             <div>
@@ -67,6 +104,7 @@ export default function LoginPage() {
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#daa520] focus:border-transparent transition-all duration-200"
                 placeholder="Enter your email"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -81,8 +119,10 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#daa520] focus:border-transparent transition-all duration-200"
-                placeholder="Enter your password"
+                placeholder="Enter your password (min 6 characters)"
                 required
+                disabled={isLoading}
+                minLength={6}
               />
             </div>
 
@@ -155,6 +195,16 @@ export default function LoginPage() {
                 Sign up here
               </Link>
             </p>
+          </div>
+
+          {/* Demo Credentials */}
+          <div className="mt-6 p-4 bg-gray-800/50 border border-gray-700 rounded-lg">
+            <h4 className="text-sm font-medium text-[#daa520] mb-2">Demo Credentials</h4>
+            <p className="text-xs text-gray-400 mb-2">Use any valid email and password (min 6 characters) to test:</p>
+            <div className="text-xs text-gray-500 space-y-1">
+              <p>Email: any@example.com</p>
+              <p>Password: 123456</p>
+            </div>
           </div>
         </div>
       </div>

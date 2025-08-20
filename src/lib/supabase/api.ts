@@ -506,3 +506,130 @@ export async function getMenu(): Promise<any[]> {
     { title: 'Contact', path: '/contact' }
   ];
 }
+
+export async function placeOrder(orderData: {
+  sessionId: string;
+  items: any[]; // Ideally OrderItem[]
+  shippingAddress: any; // Ideally ShippingAddress
+  paymentMethod: string;
+  upiId?: string;
+}) {
+  try {
+    if (!checkSupabase()) {
+      throw new Error('Supabase not configured');
+    }
+
+    const { sessionId, items, shippingAddress, paymentMethod, upiId } = orderData;
+    
+    const subtotal = items.reduce((sum, item) => sum + item.totalPrice, 0);
+    const shippingCost = 0;
+    const totalAmount = subtotal + shippingCost;
+
+    const { data: order, error: orderError } = await supabase!
+      .from('orders')
+      .insert({
+        session_id: sessionId,
+        shipping_address: shippingAddress,
+        payment_method: paymentMethod,
+        upi_id: upiId,
+        payment_status: 'pending',
+        order_status: 'pending',
+        subtotal,
+        shipping_cost: shippingCost,
+        total_amount: totalAmount
+      })
+      .select()
+      .single();
+
+    if (orderError) {
+      throw new Error(`Error creating order: ${orderError.message}`);
+    }
+
+    const orderItems = items.map(item => ({
+      order_id: order.id,
+      product_id: item.product.id,
+      quantity: item.quantity,
+      size: item.size,
+      price: item.product.price,
+      total_price: item.totalPrice
+    }));
+
+    const { error: itemsError } = await supabase!
+      .from('order_items')
+      .insert(orderItems);
+
+    if (itemsError) {
+      throw new Error(`Error creating order items: ${itemsError.message}`);
+    }
+
+    const { error: clearCartError } = await supabase!
+      .from('cart_items')
+      .delete()
+      .eq('session_id', sessionId);
+
+    if (clearCartError) {
+      console.warn('Warning: Could not clear cart after order:', clearCartError.message);
+    }
+
+    return order;
+  } catch (error) {
+    console.error('Error placing order:', error);
+    throw error;
+  }
+}
+
+export async function getOrders(sessionId: string) {
+  try {
+    if (!checkSupabase()) {
+      throw new Error('Supabase not configured');
+    }
+
+    // Get orders for the session
+    const { data: orders, error: ordersError } = await supabase!
+      .from('orders')
+      .select(`
+        *,
+        order_items (
+          *,
+          product:products (*)
+        )
+      `)
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: false });
+
+    if (ordersError) {
+      throw new Error(`Error fetching orders: ${ordersError.message}`);
+    }
+
+    // Transform the data to match our Order type
+    const transformedOrders = orders?.map(order => ({
+      id: order.id,
+      userId: order.user_id,
+      sessionId: order.session_id,
+      items: order.order_items?.map((item: any) => ({
+        id: item.id,
+        productId: item.product_id,
+        product: item.product,
+        quantity: item.quantity,
+        size: item.size,
+        price: item.price,
+        totalPrice: item.total_price
+      })) || [],
+      shippingAddress: order.shipping_address,
+      paymentMethod: order.payment_method,
+      upiId: order.upi_id,
+      paymentStatus: order.payment_status,
+      orderStatus: order.order_status,
+      subtotal: order.subtotal,
+      shippingCost: order.shipping_cost,
+      totalAmount: order.total_amount,
+      createdAt: order.created_at,
+      updatedAt: order.updated_at
+    })) || [];
+
+    return transformedOrders;
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    throw error;
+  }
+}

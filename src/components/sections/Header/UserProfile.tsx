@@ -2,17 +2,51 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function UserProfile() {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, isLoading } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Close dropdown when user logs out
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      setShowDropdown(false);
+    }
+  }, [isAuthenticated]);
+
+  // Handle escape key to close dropdown
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showDropdown]);
 
   const handleLogout = () => {
     logout();
     setShowDropdown(false);
   };
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center">
+        <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800 animate-pulse"></div>
+      </div>
+    );
+  }
+
+  // Show login button for non-authenticated users
   if (!isAuthenticated()) {
     return (
       <div className="flex items-center">
@@ -44,19 +78,15 @@ export default function UserProfile() {
       <button
         onClick={() => setShowDropdown(!showDropdown)}
         className="flex items-center gap-2 text-white hover:text-[#daa520] transition-colors duration-200"
+        title={`${user?.name || 'User'} - Click to open menu`}
       >
         <div className="w-6 h-6 bg-[#daa520] rounded-full flex items-center justify-center text-black font-bold text-xs">
           {user?.name?.charAt(0)?.toUpperCase() || 'U'}
         </div>
-        {/* <span className="text-sm font-medium hidden md:block">{user?.name}</span>
-        <svg
-          className={`w-4 h-4 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg> */}
+        {/* Optional: Show user name on larger screens */}
+        <span className="text-sm font-medium hidden lg:block text-gray-300 group-hover:text-[#daa520] transition-colors duration-200">
+          {user?.name || 'User'}
+        </span>
       </button>
 
       {/* Dropdown Menu */}
@@ -70,25 +100,34 @@ export default function UserProfile() {
             
             <Link
               href="/profile"
-              className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-[#daa520] transition-colors duration-200"
+              className="block px-4 py-3 text-sm text-gray-300 hover:bg-gray-800 hover:text-[#daa520] transition-colors duration-200 flex items-center space-x-2"
               onClick={() => setShowDropdown(false)}
             >
-              My Profile
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span>My Profile</span>
             </Link>
             
             <Link
               href="/orders"
-              className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-[#daa520] transition-colors duration-200"
+              className="block px-4 py-3 text-sm text-gray-300 hover:bg-gray-800 hover:text-[#daa520] transition-colors duration-200 flex items-center space-x-2"
               onClick={() => setShowDropdown(false)}
             >
-              My Orders
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>My Orders</span>
             </Link>
             
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors duration-200"
+              className="block w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors duration-200 flex items-center space-x-2"
             >
-              Logout
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span>Logout</span>
             </button>
           </div>
         </div>

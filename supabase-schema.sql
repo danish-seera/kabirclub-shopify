@@ -113,3 +113,45 @@ CREATE TRIGGER update_collections_updated_at BEFORE UPDATE ON collections
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+-- Orders table
+CREATE TABLE IF NOT EXISTS orders (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id),
+  session_id TEXT NOT NULL,
+  shipping_address JSONB NOT NULL,
+  payment_method TEXT NOT NULL CHECK (payment_method IN ('cash_on_delivery', 'upi')),
+  upi_id TEXT,
+  payment_status TEXT NOT NULL DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed')),
+  order_status TEXT NOT NULL DEFAULT 'pending' CHECK (order_status IN ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled')),
+  subtotal DECIMAL(10,2) NOT NULL,
+  shipping_cost DECIMAL(10,2) NOT NULL DEFAULT 0,
+  total_amount DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Order items table
+CREATE TABLE IF NOT EXISTS order_items (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  product_id UUID NOT NULL REFERENCES products(id),
+  quantity INTEGER NOT NULL,
+  size TEXT NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  total_price DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Indexes for better performance
+CREATE INDEX IF NOT EXISTS idx_orders_session_id ON orders(session_id);
+CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
+CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_order_items_product_id ON order_items(product_id);
+
+-- Enable Row Level Security
+-- ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
+
+-- Note: RLS is disabled for orders and order_items tables to allow proper order creation
+-- If you want to enable RLS later, uncomment the above lines and implement proper policies
+
