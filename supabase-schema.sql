@@ -75,7 +75,7 @@ INSERT INTO products (title, description, price, category, handle, images) VALUE
 -- Create RLS (Row Level Security) policies
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE collections ENABLE ROW LEVEL SECURITY;
-ALTER TABLE cart_items ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE cart_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
 -- Products: Allow read access to everyone
@@ -87,8 +87,8 @@ CREATE POLICY "Collections are viewable by everyone" ON collections
   FOR SELECT USING (true);
 
 -- Cart items: Allow users to manage their own cart
-CREATE POLICY "Users can manage their own cart" ON cart_items
-  FOR ALL USING (session_id IS NOT NULL);
+-- CREATE POLICY "Users can manage their own cart" ON cart_items
+--   FOR ALL USING (session_id IS NOT NULL);
 
 -- Users: Allow users to manage their own profile
 CREATE POLICY "Users can manage their own profile" ON users

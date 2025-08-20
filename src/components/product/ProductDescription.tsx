@@ -39,24 +39,37 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
     setIsAddingToCart(true);
     setShowSuccess(false);
     setErrorMessage(''); // Reset error message
+    
     try {
+      console.log('Adding to cart:', { productId: product.id, quantity, size: selectedSize });
+      
       const result = await addItem(null, {
         productId: product.id,
         quantity,
         size: selectedSize
       });
       
+      console.log('Add to cart result:', result);
+      
       if (result && result.success) {
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
         window.dispatchEvent(new CustomEvent('cartUpdated')); // Dispatch custom event
       } else {
-        setErrorMessage(result?.error || 'Failed to add item to cart.'); // Set error message
-        console.error('Error adding to cart:', result?.error || 'Unknown error');
+        const errorMsg = result?.error || 'Failed to add item to cart.';
+        setErrorMessage(errorMsg);
+        console.error('Error adding to cart:', errorMsg);
+        
+        // Show error for longer if it's a database issue
+        setTimeout(() => setErrorMessage(''), 5000);
       }
     } catch (e: any) {
-      setErrorMessage('Failed to add item to cart: ' + e.message); // Set error message
+      const errorMsg = 'Failed to add item to cart: ' + (e.message || 'Unknown error');
+      setErrorMessage(errorMsg);
       console.error('Failed to add to cart:', e);
+      
+      // Show error for longer
+      setTimeout(() => setErrorMessage(''), 5000);
     } finally {
       setIsAddingToCart(false);
     }

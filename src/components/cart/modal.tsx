@@ -1,11 +1,13 @@
 'use client';
 
 import Price from '@/components/common/price';
+import { useAuth } from '@/hooks/useAuth';
 import type { Cart } from '@/lib/supabase/types';
 import { createUrl } from '@/lib/utils';
 import { Dialog, Transition } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import CloseCart from './close-cart';
 import { DeleteItemButton } from './delete-item-button';
@@ -18,6 +20,9 @@ type MerchandiseSearchParams = {
 export default function CartModal({ cart, onCartClick }: { cart: Cart | undefined; onCartClick?: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  
   const closeCart = () => setIsOpen(false);
 
   useEffect(() => {
@@ -34,6 +39,12 @@ export default function CartModal({ cart, onCartClick }: { cart: Cart | undefine
   }, [isOpen, cart?.totalQuantity, quantityRef]);
 
   const handleCartButtonClick = () => {
+    if (!isAuthenticated()) {
+      // Redirect to login if not authenticated
+      router.push('/login');
+      return;
+    }
+    
     if (onCartClick) {
       onCartClick();
     } else {
@@ -46,7 +57,9 @@ export default function CartModal({ cart, onCartClick }: { cart: Cart | undefine
       <button
         aria-label="Open cart"
         onClick={handleCartButtonClick}
-        className="header-link ml-0 [&>*]:transition-all [&>*]:duration-300 hover:[&>*]:opacity-50 relative"
+        className={`header-link ml-0 [&>*]:transition-all [&>*]:duration-300 hover:[&>*]:opacity-50 relative ${
+          !isAuthenticated() ? 'opacity-70' : ''
+        }`}
       >
         <div className="relative">
           <svg className="w-6 h-6 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,6 +69,9 @@ export default function CartModal({ cart, onCartClick }: { cart: Cart | undefine
             <span className="absolute -top-2 -right-2 bg-[#daa520] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
               {cart.totalQuantity}
             </span>
+          )}
+          {!isAuthenticated() && (
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
           )}
         </div>
       </button>

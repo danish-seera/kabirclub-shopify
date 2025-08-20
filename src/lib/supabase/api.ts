@@ -344,53 +344,70 @@ export async function addToCart({
   sessionId: string;
   userId?: string;
 }): Promise<CartItem | null> {
+  console.log('addToCart called with:', { productId, quantity, sessionId, userId });
+  
   if (!checkSupabase()) {
     console.warn('Cart operations not available without Supabase configuration');
     return null;
   }
 
-  // Check if item already exists in cart
-  const { data: existingItem } = await supabase!
-    .from('cart_items')
-    .select('*')
-    .eq('product_id', productId)
-    .eq('session_id', sessionId)
-    .single();
-
-  if (existingItem) {
-    // Update quantity
-    const { data, error } = await supabase!
+  try {
+    // Check if item already exists in cart
+    console.log('Checking for existing cart item...');
+    const { data: existingItem, error: selectError } = await supabase!
       .from('cart_items')
-      .update({ quantity: existingItem.quantity + quantity })
-      .eq('id', existingItem.id)
-      .select()
+      .select('*')
+      .eq('product_id', productId)
+      .eq('session_id', sessionId)
       .single();
 
-    if (error) {
-      console.error('Error updating cart item:', error);
+    if (selectError && selectError.code !== 'PGRST116') {
+      console.error('Error checking existing cart item:', selectError);
       return null;
     }
 
-    return data;
-  } else {
-    // Add new item
-    const { data, error } = await supabase!
-      .from('cart_items')
-      .insert({
-        product_id: productId,
-        quantity,
-        session_id: sessionId,
-        user_id: userId
-      })
-      .select()
-      .single();
+    if (existingItem) {
+      console.log('Updating existing cart item:', existingItem);
+      // Update quantity
+      const { data, error } = await supabase!
+        .from('cart_items')
+        .update({ quantity: existingItem.quantity + quantity })
+        .eq('id', existingItem.id)
+        .select()
+        .single();
 
-    if (error) {
-      console.error('Error adding to cart:', error);
-      return null;
+      if (error) {
+        console.error('Error updating cart item:', error);
+        return null;
+      }
+
+      console.log('Cart item updated successfully:', data);
+      return data;
+    } else {
+      console.log('Adding new cart item...');
+      // Add new item
+      const { data, error } = await supabase!
+        .from('cart_items')
+        .insert({
+          product_id: productId,
+          quantity,
+          session_id: sessionId,
+          user_id: userId
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error adding to cart:', error);
+        return null;
+      }
+
+      console.log('Cart item added successfully:', data);
+      return data;
     }
-
-    return data;
+  } catch (error) {
+    console.error('Unexpected error in addToCart:', error);
+    return null;
   }
 }
 
