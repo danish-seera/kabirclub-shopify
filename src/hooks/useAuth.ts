@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 interface User {
   email: string;
   name: string;
+  phone?: string;
+  created_at?: string;
 }
 
 export function useAuth() {
@@ -17,9 +19,16 @@ export function useAuth() {
       const isLoggedIn = localStorage.getItem('isLoggedIn');
       const userEmail = localStorage.getItem('userEmail');
       const userName = localStorage.getItem('userName');
+      const userPhone = localStorage.getItem('userPhone');
+      const userCreatedAt = localStorage.getItem('userCreatedAt');
 
       if (isLoggedIn === 'true' && userEmail && userName) {
-        setUser({ email: userEmail, name: userName });
+        setUser({ 
+          email: userEmail, 
+          name: userName,
+          phone: userPhone || undefined,
+          created_at: userCreatedAt || new Date().toISOString()
+        });
       } else {
         setUser(null);
       }
@@ -51,17 +60,29 @@ export function useAuth() {
     };
   }, []);
 
-  const login = (email: string, name: string) => {
+  const login = (email: string, name: string, phone?: string) => {
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userEmail', email);
     localStorage.setItem('userName', name);
-    setUser({ email, name });
+    if (phone) {
+      localStorage.setItem('userPhone', phone);
+    }
+    localStorage.setItem('userCreatedAt', new Date().toISOString());
+    
+    setUser({ 
+      email, 
+      name, 
+      phone: phone || undefined,
+      created_at: new Date().toISOString()
+    });
   };
 
   const logout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userPhone');
+    localStorage.removeItem('userCreatedAt');
     setUser(null);
     
     // Dispatch custom event for immediate state sync

@@ -18,6 +18,15 @@ export default function ProfilePage() {
     phone: user?.phone || ''
   });
 
+  // Update editForm when user changes
+  useEffect(() => {
+    setEditForm({
+      name: user?.name || '',
+      email: user?.email || '',
+      phone: user?.phone || ''
+    });
+  }, [user]);
+
   const fetchOrders = useCallback(async () => {
     try {
       const sessionId = getSessionId();
@@ -132,7 +141,11 @@ export default function ProfilePage() {
                       value={editForm.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#daa520]"
+                      placeholder="Enter your phone number"
+                      pattern="[0-9]{10,15}"
+                      title="Please enter a valid phone number (10-15 digits)"
                     />
+                    <p className="text-xs text-gray-400 mt-1">Optional: Enter your phone number for better communication</p>
                   </div>
                   <div className="flex space-x-3">
                     <button
@@ -167,7 +180,7 @@ export default function ProfilePage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-400 mb-1">Member Since</label>
                     <p className="text-white text-lg">
-                      {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN', {
+                      {user?.created_at ? new Date(user.created_at).toLocaleDateString('en-IN', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
@@ -247,7 +260,7 @@ export default function ProfilePage() {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Member Since</span>
                   <span className="text-white font-semibold">
-                    {user?.createdAt ? new Date(user.createdAt).getFullYear() : 'N/A'}
+                    {user?.created_at ? new Date(user.created_at).getFullYear() : 'N/A'}
                   </span>
                 </div>
               </div>
