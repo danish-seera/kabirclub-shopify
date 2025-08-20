@@ -5,7 +5,7 @@ import { getOrders } from '@/lib/supabase/api';
 import { Order } from '@/lib/supabase/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Force dynamic rendering to avoid localStorage issues
 export const dynamic = 'force-dynamic';
@@ -17,6 +17,7 @@ export default function OrdersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const hasFetchedOrders = useRef(false); // Prevent multiple fetches
 
   // Add timeout to prevent infinite loading
   useEffect(() => {
@@ -44,6 +45,12 @@ export default function OrdersPage() {
   }, [authLoading]);
 
   const fetchOrders = useCallback(async () => {
+    // Prevent multiple fetches
+    if (hasFetchedOrders.current) {
+      console.log('Orders already fetched, skipping...');
+      return;
+    }
+
     try {
       setIsLoading(true);
       setError(null);
@@ -56,13 +63,14 @@ export default function OrdersPage() {
 
       const ordersData = await getOrders(sessionId);
       setOrders(ordersData || []);
+      hasFetchedOrders.current = true; // Mark as fetched
     } catch (error) {
       console.error('Error fetching orders:', error);
       setError('Failed to load orders. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, []); // Empty dependency array - function never changes
 
   useEffect(() => {
     // Wait for auth to be initialized
@@ -84,10 +92,12 @@ export default function OrdersPage() {
       return;
     }
     
-    // User is authenticated, fetch orders
-    console.log('User authenticated, fetching orders for user:', user.email);
-    fetchOrders();
-  }, [authLoading, isAuthenticated, user, router, fetchOrders]);
+    // User is authenticated, fetch orders (only once)
+    if (!hasFetchedOrders.current) {
+      console.log('User authenticated, fetching orders for user:', user.email);
+      fetchOrders();
+    }
+  }, [authLoading, user, fetchOrders, isAuthenticated, router]); // Added missing dependencies
 
   // Debug: Log current state
   console.log('Orders page render state:', { 
