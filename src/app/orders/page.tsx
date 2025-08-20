@@ -11,11 +11,37 @@ import { useCallback, useEffect, useState } from 'react';
 export const dynamic = 'force-dynamic';
 
 export default function OrdersPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+
+  // Add timeout to prevent infinite loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (authLoading) {
+        console.log('Auth loading timeout reached');
+        setLoadingTimeout(true);
+      }
+    }, 3000); // Reduced to 3 seconds
+
+    return () => clearTimeout(timer);
+  }, [authLoading]);
+
+  // Force loading to complete if stuck
+  useEffect(() => {
+    const forceCompleteTimer = setTimeout(() => {
+      if (authLoading) {
+        console.log('Force completing auth loading state');
+        // Force the component to render with current state
+        setLoadingTimeout(true);
+      }
+    }, 2000); // 2 seconds
+
+    return () => clearTimeout(forceCompleteTimer);
+  }, [authLoading]);
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -39,12 +65,70 @@ export default function OrdersPage() {
   }, []);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    // Wait for auth to be initialized
+    if (authLoading) {
+      console.log('Auth still loading...');
+      return;
+    }
+    
+    console.log('Auth state:', { 
+      isAuthenticated: isAuthenticated(), 
+      user: user, 
+      authLoading 
+    });
+    
+    // Check if user is authenticated
+    if (!isAuthenticated() || !user) {
+      console.log('User not authenticated, redirecting to login');
       router.push('/login');
       return;
     }
+    
+    // User is authenticated, fetch orders
+    console.log('User authenticated, fetching orders for user:', user.email);
     fetchOrders();
-  }, [isAuthenticated, router, fetchOrders]);
+  }, [authLoading]); // Removed problematic dependencies
+
+  // Debug: Log current state
+  console.log('Orders page render state:', { 
+    authLoading, 
+    isAuthenticated: isAuthenticated(), 
+    user, 
+    isLoading 
+  });
+
+  // Manual authentication check
+  const checkAuthManually = () => {
+    // Only run on client side
+    if (typeof window === 'undefined') {
+      return false;
+    }
+    
+    try {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userEmail = localStorage.getItem('userEmail');
+      const userName = localStorage.getItem('userName');
+      
+      console.log('Manual auth check:', { isLoggedIn, userEmail, userName });
+      
+      if (isLoggedIn === 'true' && userEmail && userName) {
+        console.log('User is actually logged in!');
+        return true;
+      } else {
+        console.log('User is not logged in');
+        return false;
+      }
+    } catch (error) {
+      console.error('Manual auth check error:', error);
+      return false;
+    }
+  };
+
+  // Force render if auth is stuck
+  if (authLoading && typeof window !== 'undefined' && checkAuthManually()) {
+    console.log('Auth is stuck but user is logged in, forcing render');
+    // Force the component to continue
+  }
 
   const getSessionId = () => {
     const cookies = document.cookie.split(';');
@@ -96,6 +180,67 @@ export default function OrdersPage() {
   };
 
   // Loading state
+  if (authLoading && !loadingTimeout) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#daa520] mx-auto mb-4"></div>
+          <p className="text-lg">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Force render if auth is stuck but we have user data
+  if (authLoading && user) {
+    console.log('Auth stuck but user exists, forcing render');
+    // Continue with the component
+  }
+
+  // Timeout state
+  if (loadingTimeout) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg mb-4">Authentication timeout</p>
+          <p className="text-gray-400 mb-6">Please refresh the page or try logging in again</p>
+          <div className="flex gap-4 justify-center">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-[#daa520] hover:bg-[#b8860b] text-black font-bold py-2 px-6 rounded-lg transition-colors duration-200"
+            >
+              Refresh Page
+            </button>
+            <Link 
+              href="/login" 
+              className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"
+            >
+              Go to Login
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Auth error state
+  if (!isAuthenticated() || !user) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg mb-4">Authentication required</p>
+          <p className="text-gray-400 mb-6">Please log in to view your orders</p>
+          <Link 
+            href="/login" 
+            className="bg-[#daa520] hover:bg-[#b38a1d] text-black font-bold py-2 px-6 rounded-lg transition-colors duration-200"
+          >
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">

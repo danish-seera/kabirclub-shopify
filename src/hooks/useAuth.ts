@@ -16,12 +16,14 @@ export function useAuth() {
 
   // Ensure we're on the client side and mounted
   useEffect(() => {
+    console.log('useAuth: Setting mounted to true');
     setMounted(true);
   }, []);
 
   const isAuthenticated = () => {
     // Server-side safety check
     if (typeof window === 'undefined' || !mounted) {
+      console.log('useAuth: isAuthenticated called before mounted or on server');
       return false;
     }
     
@@ -33,7 +35,9 @@ export function useAuth() {
       const userEmail = localStorage.getItem('userEmail');
       const userName = localStorage.getItem('userName');
       
-      return isLoggedIn === 'true' && userEmail && userName;
+      const result = isLoggedIn === 'true' && userEmail && userName;
+      console.log('useAuth: isAuthenticated localStorage check:', { isLoggedIn, userEmail, userName, result });
+      return result;
     } catch (error) {
       console.error('localStorage access error:', error);
       return false;
@@ -87,7 +91,12 @@ export function useAuth() {
 
   useEffect(() => {
     // Server-side safety check
-    if (typeof window === 'undefined' || !mounted) return;
+    if (typeof window === 'undefined' || !mounted) {
+      console.log('useAuth: useEffect skipped - not mounted or on server');
+      return;
+    }
+    
+    console.log('useAuth: Starting authentication check');
     
     const checkAuthStatus = () => {
       try {
@@ -97,7 +106,10 @@ export function useAuth() {
         const userPhone = localStorage.getItem('userPhone');
         const userCreatedAt = localStorage.getItem('userCreatedAt');
 
+        console.log('useAuth: localStorage values:', { isLoggedIn, userEmail, userName, userPhone, userCreatedAt });
+
         if (isLoggedIn === 'true' && userEmail && userName) {
+          console.log('useAuth: User found in localStorage, setting user state');
           setUser({ 
             email: userEmail, 
             name: userName,
@@ -105,12 +117,14 @@ export function useAuth() {
             created_at: userCreatedAt || new Date().toISOString()
           });
         } else {
+          console.log('useAuth: No user found in localStorage, setting user to null');
           setUser(null);
         }
       } catch (error) {
         console.error('localStorage get error:', error);
         setUser(null);
       } finally {
+        console.log('useAuth: Setting isLoading to false');
         setIsLoading(false);
       }
     };

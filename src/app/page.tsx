@@ -1,29 +1,16 @@
 // next
-import dynamic from 'next/dynamic';
 
 // loading component
 import Loading from '@/components/common/Loading';
 const loading = () => <Loading />;
 
 // components
+import AboutUs from '@/components/sections/AboutUs';
+import BestSellers from '@/components/sections/BestSellers';
+import Discounts from '@/components/sections/Discounts';
 import HomeVideo from '@/components/sections/HomeVideo';
-const Discounts = dynamic(() => import('@/components/sections/Discounts'), {
-  loading
-});
-const BestSellers = dynamic(() => import('@/components/sections/BestSellers'), {
-  loading
-});
-const Promotions = dynamic(() => import('@/components/sections/Promotions'), {
-  loading
-});
-const NewArrivals = dynamic(() => import('@/components/sections/NewArrivals/NewArrivals'), {
-  loading
-});
-const AboutUs = dynamic(() => import('@/components/sections/AboutUs'), {
-  loading
-});
-
-export const runtime = 'edge';
+import NewArrivals from '@/components/sections/NewArrivals/NewArrivals';
+import Promotions from '@/components/sections/Promotions';
 
 export const metadata = {
   description: 'Kabirclub',

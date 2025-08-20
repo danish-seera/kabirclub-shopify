@@ -26,17 +26,15 @@ export default function CartModal({ cart, onCartClick }: { cart: Cart | undefine
   const closeCart = () => setIsOpen(false);
 
   useEffect(() => {
-    // Open cart modal when quantity changes.
+    // Only update quantity reference, don't auto-open modal
     if (cart?.totalQuantity !== quantityRef.current) {
-      // But only if it's not already open (quantity also changes when editing items in cart).
-      if (!isOpen) {
-        setIsOpen(true);
-      }
-
-      // Always update the quantity reference
+      // Update the quantity reference
       quantityRef.current = cart?.totalQuantity;
+      
+      // Don't auto-open modal - only open when user clicks
+      // This prevents cart from opening automatically on page load
     }
-  }, [isOpen, cart?.totalQuantity, quantityRef]);
+  }, [cart?.totalQuantity, quantityRef]);
 
   const handleCartButtonClick = () => {
     if (!isAuthenticated()) {
