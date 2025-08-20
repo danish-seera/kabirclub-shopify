@@ -5,6 +5,9 @@ import { Cart, ShippingAddress } from '@/lib/supabase/types';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
+// Force dynamic rendering to avoid localStorage issues
+export const dynamic = 'force-dynamic';
+
 export default function CheckoutPage() {
   const router = useRouter();
   const [cart, setCart] = useState<Cart | null>(null);

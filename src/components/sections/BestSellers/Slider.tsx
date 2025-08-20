@@ -108,7 +108,6 @@ const Slider = ({ collection }: { collection: Collection }) => {
               product={product}
               delay={i > (isSm ? 2 : 1) ? 0 : i * 0.5}
               duration={i > (isSm ? 2 : 1) ? 0 : undefined}
-              rank={i + 1}
             />
           </SwiperSlide>
         ))}

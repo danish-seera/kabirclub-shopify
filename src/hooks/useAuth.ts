@@ -14,7 +14,9 @@ export function useAuth() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on component mount
+    // Server-side safety check
+    if (typeof window === 'undefined') return;
+    
     const checkAuthStatus = () => {
       const isLoggedIn = localStorage.getItem('isLoggedIn');
       const userEmail = localStorage.getItem('userEmail');
@@ -61,6 +63,9 @@ export function useAuth() {
   }, []);
 
   const login = (email: string, name: string, phone?: string) => {
+    // Server-side safety check
+    if (typeof window === 'undefined') return;
+    
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userEmail', email);
     localStorage.setItem('userName', name);
@@ -78,6 +83,9 @@ export function useAuth() {
   };
 
   const logout = () => {
+    // Server-side safety check
+    if (typeof window === 'undefined') return;
+    
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
@@ -90,6 +98,11 @@ export function useAuth() {
   };
 
   const isAuthenticated = () => {
+    // Server-side safety check
+    if (typeof window === 'undefined') {
+      return false;
+    }
+    
     // Check both state and localStorage for immediate response
     if (user) return true;
     

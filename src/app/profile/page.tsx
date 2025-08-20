@@ -7,6 +7,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
+// Force dynamic rendering to avoid localStorage issues
+export const dynamic = 'force-dynamic';
+
 export default function ProfilePage() {
   const { user, logout, isAuthenticated } = useAuth();
   const router = useRouter();
