@@ -3,13 +3,12 @@
 import { getCart, placeOrder } from '@/lib/supabase/api';
 import { Cart, ShippingAddress } from '@/lib/supabase/types';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState<'address' | 'payment' | 'confirmation'>('address');
   
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
@@ -24,43 +23,26 @@ export default function CheckoutPage() {
   });
   
   const [paymentMethod, setPaymentMethod] = useState<'cash_on_delivery' | 'upi'>('cash_on_delivery');
-  const [upiId, setUpiId] = useState('');
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
 
-  useEffect(() => {
-    fetchCart();
-  }, []);
-
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
     try {
       setIsLoading(true);
-      setError(null);
       const sessionId = getSessionId();
       if (sessionId) {
         const cartData = await getCart(sessionId);
-        // Validate cart data before setting
-        if (cartData && 
-            cartData.lines && 
-            Array.isArray(cartData.lines) && 
-            cartData.lines.length > 0) {
-          setCart(cartData);
-        } else {
-          console.warn('Invalid cart data received:', cartData);
-          setCart(null);
-          setError('Invalid cart data received. Please try refreshing the page.');
-        }
-      } else {
-        setCart(null);
-        setError('No session found. Please add items to cart first.');
+        setCart(cartData);
       }
     } catch (error) {
       console.error('Error fetching cart:', error);
-      setCart(null);
-      setError('Failed to load cart. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
 
   const getSessionId = () => {
     const cookies = document.cookie.split(';');
@@ -154,11 +136,6 @@ export default function CheckoutPage() {
     return parseFloat(cart.cost.totalAmount.amount);
   };
 
-  const getCartItemsCount = () => {
-    const items = getCartItems();
-    return items.reduce((total, item) => total + (item.quantity || 0), 0);
-  };
-
   // Loading state
   if (isLoading) {
     return (
@@ -166,33 +143,6 @@ export default function CheckoutPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#daa520] mx-auto mb-4"></div>
           <h1 className="text-2xl font-bold text-white">Loading your cart...</h1>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h1 className="text-2xl font-bold text-white mb-4">Something went wrong</h1>
-          <p className="text-gray-400 mb-6">{error}</p>
-          <div className="space-y-3">
-            <button
-              onClick={fetchCart}
-              className="bg-[#daa520] text-black px-6 py-3 rounded-lg font-semibold hover:bg-[#b38a1d] mr-3"
-            >
-              Try Again
-            </button>
-            <button
-              onClick={() => router.push('/')}
-              className="bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600"
-            >
-              Go to Home
-            </button>
-          </div>
         </div>
       </div>
     );

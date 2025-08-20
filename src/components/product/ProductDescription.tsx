@@ -38,7 +38,7 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
 
     setIsAddingToCart(true);
     setShowSuccess(false);
-    setErrorMessage('');
+    setErrorMessage(''); // Reset error message
     try {
       const result = await addItem(null, {
         productId: product.id,
@@ -49,23 +49,17 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
       if (result && result.success) {
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
-        // Dispatch custom event to update cart in real-time
-        window.dispatchEvent(new CustomEvent('cartUpdated'));
+        window.dispatchEvent(new CustomEvent('cartUpdated')); // Dispatch custom event
       } else {
-        setErrorMessage(result?.error || 'Failed to add item to cart.');
+        setErrorMessage(result?.error || 'Failed to add item to cart.'); // Set error message
+        console.error('Error adding to cart:', result?.error || 'Unknown error');
       }
-    } catch (e) {
-      setErrorMessage('Failed to add item to cart: ' + e);
+    } catch (e: any) {
+      setErrorMessage('Failed to add item to cart: ' + e.message); // Set error message
       console.error('Failed to add to cart:', e);
     } finally {
       setIsAddingToCart(false);
     }
-  };
-
-  const handleWhatsAppContact = () => {
-    const message = `Hi! I'm interested in ${product.title} (Size: ${selectedSize || 'Not selected'}, Quantity: ${quantity}). Can you help me with more details?`;
-    const whatsappUrl = `https://wa.me/+917991812899?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
   };
 
   const totalPrice = product.price * quantity;
