@@ -429,7 +429,7 @@ export default function CheckoutPage() {
             <div className="text-6xl mb-4">✅</div>
             <h2 className="text-2xl font-bold mb-4 text-[#daa520]">Order Placed Successfully!</h2>
             <p className="text-gray-300 mb-6">
-              Thank you for your order. We'll process it and ship it to your address soon.
+              Thank you for your order. We&apos;ll process it and ship it to your address soon.
             </p>
             <div className="space-y-4">
               <button
