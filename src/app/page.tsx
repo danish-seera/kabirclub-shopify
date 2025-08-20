@@ -1,9 +1,5 @@
 // next
 
-// loading component
-import Loading from '@/components/common/Loading';
-const loading = () => <Loading />;
-
 // components
 import AboutUs from '@/components/sections/AboutUs';
 import BestSellers from '@/components/sections/BestSellers';

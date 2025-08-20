@@ -87,7 +87,7 @@ export default function OrdersPage() {
     // User is authenticated, fetch orders
     console.log('User authenticated, fetching orders for user:', user.email);
     fetchOrders();
-  }, [authLoading]); // Removed problematic dependencies
+  }, [authLoading, isAuthenticated, user, router, fetchOrders]);
 
   // Debug: Log current state
   console.log('Orders page render state:', { 

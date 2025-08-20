@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 export const dynamic = 'force-dynamic';
 
 export default function ProfilePage() {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -43,12 +43,20 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    // Wait for auth to be initialized
+    if (authLoading) {
+      return;
+    }
+    
+    // Check if user is authenticated
+    if (!isAuthenticated() || !user) {
       router.push('/login');
       return;
     }
+    
+    // User is authenticated, fetch orders
     fetchOrders();
-  }, [isAuthenticated, router, fetchOrders]);
+  }, [authLoading, isAuthenticated, user, router, fetchOrders]);
 
   const getSessionId = () => {
     const cookies = document.cookie.split(';');
@@ -79,8 +87,34 @@ export default function ProfilePage() {
     router.push('/');
   };
 
-  if (!isAuthenticated()) {
-    return null; // Will redirect in useEffect
+  // Loading state while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#daa520] mx-auto mb-4"></div>
+          <p className="text-lg">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Auth error state
+  if (!isAuthenticated() || !user) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg mb-4">Authentication required</p>
+          <p className="text-gray-400 mb-6">Please log in to view your profile</p>
+          <button 
+            onClick={() => router.push('/login')}
+            className="bg-[#daa520] hover:bg-[#b38a1d] text-black font-bold py-2 px-6 rounded-lg transition-colors duration-200"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
