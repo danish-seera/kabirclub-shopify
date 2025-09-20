@@ -35,16 +35,17 @@ export default function CatalogUploadPage() {
 
   const parseCSV = (csvText: string): CSVProduct[] => {
     const lines = csvText.split('\n');
-    const headers = lines[0].split(',').map(h => h.trim());
     const products: CSVProduct[] = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim());
+      const line = lines[i];
+      if (!line) continue;
+      const values = line.split(',').map(v => v.trim());
       if (values.length >= 6) {
         const product: CSVProduct = {
           title: values[0] || '',
           description: values[1] || '',
-          price: parseFloat(values[2]) || 0,
+          price: parseFloat(values[2] || '0') || 0,
           category: values[3] || '',
           handle: values[4] || '',
           images: values[5] ? values[5].split('|').filter(img => img.trim()) : []
@@ -319,7 +320,7 @@ export default function CatalogUploadPage() {
           <p>• <strong>JSON Format:</strong> Array of product objects</p>
           <p>• <strong>Required fields:</strong> title, price, handle, category</p>
           <p>• <strong>Images:</strong> Provide valid URLs (for CSV, separate multiple URLs with |)</p>
-          <p>• <strong>Handle:</strong> Must be unique URL-friendly identifier (e.g., "premium-white-tshirt")</p>
+          <p>• <strong>Handle:</strong> Must be unique URL-friendly identifier (e.g., &quot;premium-white-tshirt&quot;)</p>
           <p>• <strong>Price:</strong> In rupees (e.g., 999 for ₹999)</p>
         </div>
       </div>

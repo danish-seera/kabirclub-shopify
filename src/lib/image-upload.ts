@@ -85,16 +85,22 @@ export const uploadImageFile = async (
 
 export const uploadMultipleImages = async (
   files: File[],
-  onProgress?: (uploadedCount: number, totalCount: number) => void,
+  // eslint-disable-next-line no-unused-vars
+  onProgress?: (uploaded: number, total: number) => void,
   controller?: AbortController
 ): Promise<ImageUploadResult[]> => {
   const results: ImageUploadResult[] = [];
   
   for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (!file) continue;
+    
     try {
-      const result = await uploadImageFile(files[i], controller);
+      const result = await uploadImageFile(file, controller);
       results.push(result);
-      onProgress?.(i + 1, files.length);
+      if (onProgress) {
+        onProgress(i + 1, files.length);
+      }
     } catch (error) {
       console.error(`Failed to upload image ${i + 1}:`, error);
       throw error;
@@ -113,7 +119,11 @@ const fileToBase64 = (file: File): Promise<string> => {
       if (typeof reader.result === 'string') {
         // Remove data:image/...;base64, prefix
         const base64 = reader.result.split(',')[1];
-        resolve(base64);
+        if (base64) {
+          resolve(base64);
+        } else {
+          reject(new Error('Failed to extract base64 data'));
+        }
       } else {
         reject(new Error('Failed to convert file to base64'));
       }

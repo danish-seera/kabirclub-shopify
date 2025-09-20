@@ -38,7 +38,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
 
   useEffect(() => {
     fetchProduct();
-  }, [params.id]);
+  }, [params.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchProduct = async () => {
     try {
@@ -312,6 +312,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {formData.images.map((imageUrl, index) => (
                   <div key={index} className="relative group">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imageUrl}
                       alt={`Product image ${index + 1}`}

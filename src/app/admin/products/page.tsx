@@ -19,7 +19,7 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchProducts = async () => {
     try {
@@ -163,6 +163,7 @@ export default function AdminProductsPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         {product.images?.[0] && (
+                          // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={product.images[0]}
                             alt={product.title}

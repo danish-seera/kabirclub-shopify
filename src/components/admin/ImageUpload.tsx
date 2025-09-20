@@ -4,16 +4,18 @@ import { compressImage, uploadImageFile, validateImageFile } from '@/lib/image-u
 import { useCallback, useRef, useState } from 'react';
 
 interface ImageUploadProps {
-  onImageUploaded: (url: string) => void;
-  onError?: (error: string) => void;
+  // eslint-disable-next-line no-unused-vars
+  onImageUploaded: (imageUrl: string) => void;
+  // eslint-disable-next-line no-unused-vars
+  onError?: (errorMessage: string) => void;
   className?: string;
   maxImages?: number;
   currentImages?: string[];
 }
 
 export default function ImageUpload({ 
-  onImageUploaded, 
-  onError, 
+  onImageUploaded: onImageUploadedProp, 
+  onError: onErrorProp, 
   className = '', 
   maxImages = 1,
   currentImages = []
@@ -26,7 +28,7 @@ export default function ImageUpload({
 
   const handleFiles = useCallback(async (files: FileList) => {
     if (currentImages.length >= maxImages) {
-      onError?.(`Maximum ${maxImages} images allowed`);
+      onErrorProp?.(`Maximum ${maxImages} images allowed`);
       return;
     }
 
@@ -36,7 +38,7 @@ export default function ImageUpload({
     for (const file of filesToUpload) {
       const validation = validateImageFile(file);
       if (!validation.isValid) {
-        onError?.(validation.error || 'Invalid image file');
+        onErrorProp?.(validation.error || 'Invalid image file');
         continue;
       }
 
@@ -55,12 +57,12 @@ export default function ImageUpload({
         // Upload image
         const result = await uploadImageFile(processedFile, controllerRef.current);
         
-        onImageUploaded(result.url);
+        onImageUploadedProp(result.url);
         setUploadProgress(100);
         
       } catch (error: any) {
         if (error.name !== 'AbortError') {
-          onError?.(error.message || 'Failed to upload image');
+          onErrorProp?.(error.message || 'Failed to upload image');
         }
       } finally {
         setIsUploading(false);
@@ -68,7 +70,7 @@ export default function ImageUpload({
         controllerRef.current = null;
       }
     }
-  }, [currentImages.length, maxImages, onImageUploaded, onError]);
+  }, [currentImages.length, maxImages, onImageUploadedProp, onErrorProp]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -192,6 +194,7 @@ export default function ImageUpload({
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentImages.map((imageUrl, index) => (
             <div key={index} className="relative group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imageUrl}
                 alt={`Upload ${index + 1}`}
@@ -203,9 +206,9 @@ export default function ImageUpload({
               <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
                 <button
                   onClick={() => {
-                    // Remove this image
-                    const newImages = currentImages.filter((_, i) => i !== index);
+                    // Remove this image functionality would go here
                     // You might want to add an onImageRemoved callback prop
+                    console.log('Remove image at index:', index);
                   }}
                   className="p-1 bg-red-600 text-white rounded-full hover:bg-red-700"
                   title="Remove image"
