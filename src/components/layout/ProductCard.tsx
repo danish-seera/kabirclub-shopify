@@ -18,7 +18,7 @@ export default function ProductCard({ product, delay = 0, duration }: ProductCar
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: duration || 0.5, delay }}
-      className="group relative overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl"
+      className="group relative overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl w-full max-w-sm mx-auto"
     >
       {/* {rank && (
         <div className="absolute left-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-[#daa520] text-sm font-bold text-white">
@@ -33,22 +33,22 @@ export default function ProductCard({ product, delay = 0, duration }: ProductCar
             alt={product.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 480px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 33vw, 25vw"
           />
         </div>
         
-        <div className="p-4">
-          <h3 className="mb-2 text-m font-semibold text-gray-800 line-clamp-1">
+        <div className="p-3 sm:p-4">
+          <h3 className="mb-2 text-sm sm:text-base md:text-lg font-semibold text-gray-800 line-clamp-2 leading-tight">
             {product.title}
           </h3>
           {/* <p className="mb-3 text-xs text-gray-600 line-clamp-2">
             {product.description}
           </p> */}
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-2 sm:mb-3 flex items-center justify-between">
             <Price
               amount={product.price.toString()}
               currencyCode="INR"
-              className="text-l font-bold text-[#daa520]"
+              className="text-base sm:text-lg md:text-xl font-bold text-[#daa520]"
             />
             {/* <span className="text-sm text-gray-500 capitalize">
               {product.category}

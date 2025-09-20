@@ -17,13 +17,13 @@ const NewArrivals = async () => {
     const safeProducts = Array.isArray(result.products) ? result.products : [];
     
     return (
-      <section className="flex w-full items-center justify-center bg-black pb-[48px] pt-[24px] md:pt-[48px]">
-        <div className="flex flex-col items-center justify-center gap-[24px] w-full px-2 md:w-[904px] md:gap-[48px]">
-          <h2 className="w-full text-center font-lora text-[clamp(28px,20px_+_2vw,40px)] font-medium text-[#D4AF37] md:text-left">
+      <section className="flex w-full items-center justify-center bg-black pb-8 sm:pb-12 md:pb-16 pt-6 sm:pt-8 md:pt-12">
+        <div className="flex flex-col items-center justify-center gap-6 sm:gap-8 md:gap-12 w-full max-w-[95%] px-3 sm:px-4 md:max-w-[904px]">
+          <h2 className="w-full text-center font-lora text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-medium text-[#D4AF37]">
             New Arrivals
           </h2>
           <ProductList products={safeProducts} />
-          <a href="/search?sort=createdAt-desc" className="btn text-[clamp(18px,10px_+_2vw,22px)]">
+          <a href="/search?sort=createdAt-desc" className="btn text-base sm:text-lg md:text-xl lg:text-[22px] px-6 sm:px-8 py-2 sm:py-3">
             View More
           </a>
         </div>
@@ -33,13 +33,13 @@ const NewArrivals = async () => {
     console.error('Error loading New Arrivals:', error);
     // Return fallback UI if there's an error
     return (
-      <section className="flex w-full items-center justify-center bg-black pb-[48px] pt-[24px] md:pt-[48px]">
-        <div className="flex flex-col items-center justify-center gap-[4px] w-full px-1 md:w-[104px] md:gap-[18px]">
-          <h2 className="w-full text-center font-lora text-[clamp(28px,20px_+_2vw,40px)] font-medium text-[#D4AF37] md:text-left">
+      <section className="flex w-full items-center justify-center bg-black pb-8 sm:pb-12 md:pb-16 pt-6 sm:pt-8 md:pt-12">
+        <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 w-full max-w-[95%] px-3 sm:px-4 md:max-w-[904px]">
+          <h2 className="w-full text-center font-lora text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-medium text-[#D4AF37]">
             New Arrivals
           </h2>
           <div className="text-center text-gray-500">
-            <p>Loading products...</p>
+            <p className="text-sm sm:text-base">Loading products...</p>
           </div>
         </div>
       </section>

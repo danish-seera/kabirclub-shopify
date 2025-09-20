@@ -23,9 +23,9 @@ const ProductList = ({ products = [] }: ProductListProps) => {
   // If no products, show empty state
   if (!products || products.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <p className="text-lg text-gray-500 mb-4">No products available</p>
-        <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#daa520] to-transparent" />
+      <div className="flex flex-col items-center justify-center py-8 sm:py-12 px-4">
+        <p className="text-base sm:text-lg text-gray-500 mb-3 sm:mb-4 text-center">No products available</p>
+        <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent via-[#daa520] to-transparent" />
       </div>
     );
   }
@@ -33,17 +33,17 @@ const ProductList = ({ products = [] }: ProductListProps) => {
   return (
     <div className="relative w-full">
       {isMobile ? (
-        <div className="grid grid-cols-2 gap-1">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 px-2 w-full max-w-lg mx-auto">
           {products.slice(0, 4).map((product) => (
-            <div key={product.id} className="p-2">
+            <div key={product.id} className="flex justify-center">
               {product && product.id ? (
                 <ProductCard product={product} />
               ) : (
-                <div className="flex flex-col gap-4 p-4 bg-gray-100 rounded-lg">
+                <div className="flex flex-col gap-3 p-3 bg-gray-100 rounded-lg w-full max-w-[160px]">
                   <div className="aspect-square bg-gray-200 rounded-lg" />
                   <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded" />
-                    <div className="h-3 bg-gray-200 rounded w-3/4" />
+                    <div className="h-3 bg-gray-200 rounded" />
+                    <div className="h-2 bg-gray-200 rounded w-3/4" />
                   </div>
                 </div>
               )}
@@ -108,11 +108,11 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                 {product && product.id ? (
                   <ProductCard product={product} />
                 ) : (
-                  <div className="flex flex-col gap-4 p-4 bg-gray-100 rounded-lg">
+                  <div className="flex flex-col gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-100 rounded-lg w-full max-w-sm">
                     <div className="aspect-square bg-gray-200 rounded-lg" />
                     <div className="space-y-2">
-                      <div className="h-4 bg-gray-200 rounded" />
-                      <div className="h-3 bg-gray-200 rounded w-3/4" />
+                      <div className="h-3 sm:h-4 bg-gray-200 rounded" />
+                      <div className="h-2 sm:h-3 bg-gray-200 rounded w-3/4" />
                     </div>
                   </div>
                 )}
