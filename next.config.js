@@ -7,6 +7,7 @@ const nextConfig = {
     domains: [
       'images.unsplash.com',
       'plus.unsplash.com',
+      'i.ibb.co',
       'localhost',
       '127.0.0.1'
     ],
@@ -20,6 +21,12 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'plus.unsplash.com',
+        port: '',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co',
         port: '',
         pathname: '/**'
       },

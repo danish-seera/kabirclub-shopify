@@ -43,6 +43,7 @@ CREATE TABLE users (
   email VARCHAR(255) UNIQUE NOT NULL,
   full_name VARCHAR(255),
   avatar_url VARCHAR(500),
+  role VARCHAR(50) DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'super_admin')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -60,6 +61,11 @@ CREATE INDEX idx_cart_items_user_id ON cart_items(user_id);
 
 CREATE INDEX idx_users_email ON users(email);
 
+-- Insert sample admin user
+INSERT INTO users (email, full_name, role) VALUES
+  ('admin@kabirclub.com', 'Admin User', 'admin'),
+  ('mohd.danish@kabirclub.com', 'Mohammad Danish', 'super_admin');
+
 -- Insert sample data
 INSERT INTO collections (title, description, handle) VALUES
   ('Topwear', 'All top clothing items', 'topwear'),
@@ -73,18 +79,22 @@ INSERT INTO products (title, description, price, category, handle, images) VALUE
   ('Casual Shirt', 'Elegant casual shirt for any occasion', 1499.00, 'Topwear', 'casual-shirt', ARRAY['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60']);
 
 -- Create RLS (Row Level Security) policies
-ALTER TABLE products ENABLE ROW LEVEL SECURITY;
-ALTER TABLE collections ENABLE ROW LEVEL SECURITY;
+-- Temporarily disable RLS for products and collections for admin operations
+-- ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE collections ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE cart_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
--- Products: Allow read access to everyone
-CREATE POLICY "Products are viewable by everyone" ON products
-  FOR SELECT USING (true);
+-- RLS policies commented out since RLS is disabled for products and collections
+-- This allows admin operations to work without complex policy setup
 
--- Collections: Allow read access to everyone
-CREATE POLICY "Collections are viewable by everyone" ON collections
-  FOR SELECT USING (true);
+-- Products: Allow read access to everyone (when RLS is enabled)
+-- CREATE POLICY "Products are viewable by everyone" ON products
+--   FOR SELECT USING (true);
+
+-- Collections: Allow read access to everyone (when RLS is enabled)  
+-- CREATE POLICY "Collections are viewable by everyone" ON collections
+--   FOR SELECT USING (true);
 
 -- Cart items: Allow users to manage their own cart
 -- CREATE POLICY "Users can manage their own cart" ON cart_items
@@ -154,4 +164,14 @@ CREATE INDEX IF NOT EXISTS idx_order_items_product_id ON order_items(product_id)
 
 -- Note: RLS is disabled for orders and order_items tables to allow proper order creation
 -- If you want to enable RLS later, uncomment the above lines and implement proper policies
+
+-- Additional commands to disable RLS if already enabled (run these in Supabase SQL editor)
+-- ALTER TABLE products DISABLE ROW LEVEL SECURITY;
+-- ALTER TABLE collections DISABLE ROW LEVEL SECURITY;
+-- DROP POLICY IF EXISTS "Products are viewable by everyone" ON products;
+-- DROP POLICY IF EXISTS "Admins can manage products" ON products;
+-- DROP POLICY IF EXISTS "Allow all operations on products" ON products;
+-- DROP POLICY IF EXISTS "Collections are viewable by everyone" ON collections;
+-- DROP POLICY IF EXISTS "Admins can manage collections" ON collections;
+-- DROP POLICY IF EXISTS "Allow all operations on collections" ON collections;
 
