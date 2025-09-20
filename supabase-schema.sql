@@ -12,6 +12,7 @@ CREATE TABLE products (
   images TEXT[] DEFAULT '{}',
   category VARCHAR(100) NOT NULL,
   handle VARCHAR(255) UNIQUE NOT NULL,
+  is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -73,10 +74,10 @@ INSERT INTO collections (title, description, handle) VALUES
   ('Accessories', 'Fashion accessories', 'accessories');
 
 -- Insert sample products
-INSERT INTO products (title, description, price, category, handle, images) VALUES
-  ('Classic White T-Shirt', 'Premium cotton t-shirt in classic white', 999.00, 'Topwear', 'classic-white-tshirt', ARRAY['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60', 'https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=800&auto=format&fit=crop&q=60']),
-  ('Denim Jeans', 'Comfortable denim jeans with perfect fit', 1999.00, 'Bottomwear', 'denim-jeans', ARRAY['https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=60']),
-  ('Casual Shirt', 'Elegant casual shirt for any occasion', 1499.00, 'Topwear', 'casual-shirt', ARRAY['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60']);
+INSERT INTO products (title, description, price, category, handle, images, is_active) VALUES
+  ('Classic White T-Shirt', 'Premium cotton t-shirt in classic white', 999.00, 'Topwear', 'classic-white-tshirt', ARRAY['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60', 'https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=800&auto=format&fit=crop&q=60'], true),
+  ('Denim Jeans', 'Comfortable denim jeans with perfect fit', 1999.00, 'Bottomwear', 'denim-jeans', ARRAY['https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=60'], true),
+  ('Casual Shirt', 'Elegant casual shirt for any occasion', 1499.00, 'Topwear', 'casual-shirt', ARRAY['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60'], true);
 
 -- Create RLS (Row Level Security) policies
 -- Temporarily disable RLS for products and collections for admin operations

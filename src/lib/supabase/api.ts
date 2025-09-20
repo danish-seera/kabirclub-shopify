@@ -11,6 +11,7 @@ const fallbackProducts: Product[] = [
     images: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60'],
     category: 'Topwear',
     handle: 'classic-white-tshirt',
+    is_active: true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   },
@@ -22,6 +23,7 @@ const fallbackProducts: Product[] = [
     images: ['https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=60'],
     category: 'Bottomwear',
     handle: 'denim-jeans',
+    is_active: true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   },
@@ -33,6 +35,7 @@ const fallbackProducts: Product[] = [
     images: ['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60'],
     category: 'Topwear',
     handle: 'casual-shirt',
+    is_active: true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   }
@@ -146,6 +149,7 @@ export async function getProducts({
   let queryBuilder = supabase!
     .from('products')
     .select('*')
+    .eq('is_active', true) // Only show active products
     .order(sortBy, { ascending: sortOrder === 'asc' });
 
   if (query) {
@@ -208,6 +212,7 @@ export async function getProduct(handle: string): Promise<Product | null> {
     .from('products')
     .select('*')
     .eq('handle', handle)
+    .eq('is_active', true) // Only show active products
     .single();
 
   if (error) {
@@ -228,6 +233,7 @@ export async function getProductRecommendations(productId: string, limit = 3): P
     .from('products')
     .select('*')
     .neq('id', productId)
+    .eq('is_active', true) // Only show active products
     .limit(limit)
     .order('created_at', { ascending: false });
 
@@ -296,6 +302,7 @@ export async function getCollectionProducts({
     .from('products')
     .select('*')
     .eq('category', collection)
+    .eq('is_active', true) // Only show active products
     .order(sortBy, { ascending: sortOrder === 'asc' })
     .limit(limit);
 

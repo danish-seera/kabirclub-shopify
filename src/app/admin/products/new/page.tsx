@@ -19,7 +19,8 @@ export default function NewProductPage() {
     price: '',
     category: '',
     handle: '',
-    images: [] as string[]
+    images: [] as string[],
+    is_active: true
   });
   
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -27,7 +28,7 @@ export default function NewProductPage() {
   const categories = ['Topwear', 'Bottomwear', 'Accessories', 'Footwear'];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     
     if (name === 'title' && !formData.handle) {
       // Auto-generate handle from title
@@ -45,7 +46,7 @@ export default function NewProductPage() {
     } else {
       setFormData(prev => ({
         ...prev,
-        [name]: value
+        [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
       }));
     }
   };
@@ -96,7 +97,8 @@ export default function NewProductPage() {
         price: price,
         category: formData.category,
         handle: formData.handle,
-        images: images
+        images: images,
+        is_active: formData.is_active
       };
 
       await createProduct(productData);
@@ -231,6 +233,26 @@ export default function NewProductPage() {
             className="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
             placeholder="Enter product description"
           />
+        </div>
+
+        {/* Product Status */}
+        <div className="bg-gray-800 rounded-lg p-4">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="is_active"
+              name="is_active"
+              checked={formData.is_active}
+              onChange={handleInputChange}
+              className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
+            />
+            <label htmlFor="is_active" className="text-white text-sm font-medium">
+              Product is active (visible to customers)
+            </label>
+          </div>
+          <p className="text-gray-400 text-xs mt-1">
+            Uncheck to create this product as disabled (not visible to customers)
+          </p>
         </div>
 
         {/* Product Images */}

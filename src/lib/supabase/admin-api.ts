@@ -10,6 +10,7 @@ export async function createProduct(productData: {
   images: string[];
   category: string;
   handle: string;
+  is_active?: boolean;
 }): Promise<Product | null> {
   if (!isSupabaseConfigured()) {
     throw new Error('Supabase not configured');
@@ -17,7 +18,10 @@ export async function createProduct(productData: {
 
   const { data, error } = await supabase!
     .from('products')
-    .insert(productData)
+    .insert({
+      ...productData,
+      is_active: productData.is_active ?? true // Default to true if not provided
+    })
     .select()
     .single();
 
@@ -38,6 +42,7 @@ export async function updateProduct(
     images: string[];
     category: string;
     handle: string;
+    is_active: boolean;
   }>
 ): Promise<Product | null> {
   if (!isSupabaseConfigured()) {
@@ -75,6 +80,26 @@ export async function deleteProduct(id: string): Promise<boolean> {
   }
 
   return true;
+}
+
+export async function toggleProductStatus(id: string, isActive: boolean): Promise<Product | null> {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  const { data, error } = await supabase!
+    .from('products')
+    .update({ is_active: isActive })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error toggling product status:', error);
+    throw new Error(`Failed to toggle product status: ${error.message}`);
+  }
+
+  return data;
 }
 
 export async function createCollection(collectionData: {

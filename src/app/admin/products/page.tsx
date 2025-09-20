@@ -1,7 +1,7 @@
 'use client';
 
 import { useAdminAuth } from '@/hooks/useAdminAuth';
-import { deleteProduct } from '@/lib/supabase/admin-api';
+import { deleteProduct, toggleProductStatus } from '@/lib/supabase/admin-api';
 import { getProducts } from '@/lib/supabase/api';
 import { Product } from '@/lib/supabase/types';
 import Link from 'next/link';
@@ -58,6 +58,28 @@ export default function AdminProductsPage() {
       setMessage({
         type: 'error',
         text: error.message || 'Failed to delete product'
+      });
+    }
+  };
+
+  const handleToggleStatus = async (id: string, currentStatus: boolean, title: string) => {
+    try {
+      requireAdmin();
+      const newStatus = !currentStatus;
+      await toggleProductStatus(id, newStatus);
+      
+      setProducts(products.map(p => 
+        p.id === id ? { ...p, is_active: newStatus } : p
+      ));
+      
+      setMessage({
+        type: 'success',
+        text: `Product "${title}" ${newStatus ? 'enabled' : 'disabled'} successfully`
+      });
+    } catch (error: any) {
+      setMessage({
+        type: 'error',
+        text: error.message || 'Failed to toggle product status'
       });
     }
   };
@@ -150,6 +172,9 @@ export default function AdminProductsPage() {
                     Price
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Created
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
@@ -190,6 +215,28 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                       {formatPrice(product.price)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center space-x-2">
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                          product.is_active 
+                            ? 'bg-green-900 text-green-200' 
+                            : 'bg-red-900 text-red-200'
+                        }`}>
+                          {product.is_active ? 'Active' : 'Disabled'}
+                        </span>
+                        <button
+                          onClick={() => handleToggleStatus(product.id, product.is_active, product.title)}
+                          className={`px-2 py-1 text-xs rounded ${
+                            product.is_active
+                              ? 'bg-red-600 text-white hover:bg-red-700'
+                              : 'bg-green-600 text-white hover:bg-green-700'
+                          }`}
+                          title={product.is_active ? 'Disable product' : 'Enable product'}
+                        >
+                          {product.is_active ? 'Disable' : 'Enable'}
+                        </button>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                       {new Date(product.created_at).toLocaleDateString()}
