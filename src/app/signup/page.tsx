@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -14,7 +15,9 @@ export default function SignupPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -35,16 +38,40 @@ export default function SignupPage() {
         return;
       }
 
-      // TODO: Implement actual signup logic
-      // For now, simulate signup with basic validation
+      // Validate all required fields
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+        setError('Please fill in all fields');
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setError('Please enter a valid email address');
+        return;
+      }
+
+      // Validate password strength
+      if (formData.password.length < 6) {
+        setError('Password must be at least 6 characters long');
+        return;
+      }
+
+      // For demo purposes, simulate signup with basic validation
       if (formData.firstName && formData.lastName && formData.email && formData.password) {
-        // Store user session
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', formData.email);
-        localStorage.setItem('userName', `${formData.firstName} ${formData.lastName}`);
+        // Extract name from form data
+        const name = `${formData.firstName} ${formData.lastName}`;
         
-        // Redirect to home page
-        router.push('/');
+        // Use the useAuth hook to login (simulating successful signup)
+        login(formData.email, name);
+        
+        // Show success message briefly
+        setSuccess('Account created successfully! Redirecting...');
+        
+        // Redirect to home page after a brief delay
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
       } else {
         setError('Please fill in all fields');
       }
@@ -70,6 +97,11 @@ export default function SignupPage() {
             {error && (
               <div className="bg-red-900/20 border border-red-800 text-red-400 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm">
                 {error}
+              </div>
+            )}
+            {success && (
+              <div className="bg-green-900/20 border border-green-800 text-green-400 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm">
+                {success}
               </div>
             )}
 

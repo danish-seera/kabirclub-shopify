@@ -197,15 +197,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Demo Credentials */}
-          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-800/50 border border-gray-700 rounded-lg">
-            <h4 className="text-xs sm:text-sm font-medium text-[#daa520] mb-2">Demo Credentials</h4>
-            <p className="text-xs text-gray-400 mb-2">Use any valid email and password (min 6 characters) to test:</p>
-            <div className="text-xs text-gray-500 space-y-1">
-              <p>Email: any@example.com</p>
-              <p>Password: 123456</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

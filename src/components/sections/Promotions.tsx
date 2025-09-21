@@ -22,6 +22,7 @@ const Promotions = () => {
             fill
             sizes="(min-width: 768px) 100vw, 867px"
             className="object-cover brightness-[0.85]"
+            priority
           />
         </Parallax>
         
@@ -33,6 +34,7 @@ const Promotions = () => {
             fill
             sizes="(min-width: 768px) 100vw, 867px"
             className="object-cover brightness-[0.85]"
+            priority
           />
         </div>
         
