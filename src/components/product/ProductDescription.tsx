@@ -99,13 +99,13 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
           <span className="bg-gray-800 text-gray-300 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm w-fit">
             {product.category}
           </span>
-          <div className="flex flex-wrap gap-1">
+          {/* <div className="flex flex-wrap gap-1">
             {product.sizes?.map((size, index) => (
               <span key={index} className="bg-blue-800 text-blue-200 px-2 py-1 rounded-full text-xs sm:text-sm">
                 {size}
               </span>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
 
