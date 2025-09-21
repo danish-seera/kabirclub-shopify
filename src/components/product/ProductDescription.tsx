@@ -12,8 +12,6 @@ interface ProductDescriptionProps {
   product: Product;
 }
 
-// Common clothing sizes
-const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 export default function ProductDescription({ product }: ProductDescriptionProps) {
   const [selectedSize, setSelectedSize] = useState<string>('');
