@@ -57,12 +57,21 @@ export function useAuth() {
       }
       localStorage.setItem('userCreatedAt', new Date().toISOString());
       
-      setUser({ 
+      const userData = { 
         email, 
         name, 
         phone: phone || undefined,
         created_at: new Date().toISOString()
-      });
+      };
+      
+      setUser(userData);
+      
+      // Dispatch custom event for immediate state sync across components
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('userLogin', { 
+          detail: userData 
+        }));
+      }
     } catch (error) {
       console.error('localStorage set error:', error);
     }
@@ -86,6 +95,33 @@ export function useAuth() {
       }
     } catch (error) {
       console.error('localStorage remove error:', error);
+    }
+  };
+
+  const refreshAuth = () => {
+    // Server-side safety check
+    if (typeof window === 'undefined' || !mounted) return;
+    
+    try {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userEmail = localStorage.getItem('userEmail');
+      const userName = localStorage.getItem('userName');
+      const userPhone = localStorage.getItem('userPhone');
+      const userCreatedAt = localStorage.getItem('userCreatedAt');
+
+      if (isLoggedIn === 'true' && userEmail && userName) {
+        setUser({ 
+          email: userEmail, 
+          name: userName,
+          phone: userPhone || undefined,
+          created_at: userCreatedAt || new Date().toISOString()
+        });
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error('localStorage get error:', error);
+      setUser(null);
     }
   };
 
@@ -144,13 +180,23 @@ export function useAuth() {
       setIsLoading(false);
     };
 
+    // Listen for custom login events
+    const handleLoginEvent = (e: CustomEvent) => {
+      if (e.detail) {
+        setUser(e.detail);
+        setIsLoading(false);
+      }
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('storage', handleStorageChange);
       window.addEventListener('userLogout', handleLogoutEvent);
+      window.addEventListener('userLogin', handleLoginEvent as EventListener);
       
       return () => {
         window.removeEventListener('storage', handleStorageChange);
         window.removeEventListener('userLogout', handleLogoutEvent);
+        window.removeEventListener('userLogin', handleLoginEvent as EventListener);
       };
     }
   }, [mounted]);
@@ -162,7 +208,8 @@ export function useAuth() {
       isLoading: true,
       isAuthenticated: () => false,
       login: () => {},
-      logout: () => {}
+      logout: () => {},
+      refreshAuth: () => {}
     };
   }
 
@@ -171,6 +218,7 @@ export function useAuth() {
     isLoading,
     isAuthenticated,
     login,
-    logout
+    logout,
+    refreshAuth
   };
 }

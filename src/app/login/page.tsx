@@ -55,6 +55,9 @@ export default function LoginPage() {
         // Show success message briefly
         setSuccess('Login successful! Redirecting...');
         
+        // Force a small delay to ensure state is updated before redirect
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         // Redirect to home page after a brief delay
         setTimeout(() => {
           router.push('/');

@@ -6,16 +6,31 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function UserProfile() {
-  const { user, logout, isAuthenticated, isLoading } = useAuth();
+  const { user, logout, isAuthenticated, isLoading, refreshAuth } = useAuth();
   const { isAdmin } = useAdminAuth();
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Close dropdown when user logs out
+  // Close dropdown when user logs out and handle state changes
   useEffect(() => {
     if (!isAuthenticated()) {
       setShowDropdown(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
+
+  // Listen for login events and refresh auth state
+  useEffect(() => {
+    const handleLoginEvent = () => {
+      refreshAuth();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('userLogin', handleLoginEvent);
+      
+      return () => {
+        window.removeEventListener('userLogin', handleLoginEvent);
+      };
+    }
+  }, [refreshAuth]);
 
   // Handle escape key to close dropdown
   useEffect(() => {

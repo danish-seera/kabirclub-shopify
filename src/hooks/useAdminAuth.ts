@@ -10,7 +10,7 @@ const ADMIN_EMAILS = [
 ];
 
 export function useAdminAuth() {
-  const { user, isLoading, isAuthenticated, login, logout } = useAuth();
+  const { user, isLoading, isAuthenticated, login, logout, refreshAuth } = useAuth();
 
   const isAdmin = () => {
     if (!user || !user.email) return false;
@@ -34,6 +34,7 @@ export function useAdminAuth() {
     isAdmin,
     requireAdmin,
     login,
-    logout
+    logout,
+    refreshAuth
   };
 }
