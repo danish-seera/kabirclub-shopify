@@ -80,9 +80,7 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
 
   const handleWhatsAppShare = () => {
     shareOnWhatsApp({
-      product,
-      selectedSize,
-      quantity
+      product
     });
   };
 
@@ -94,13 +92,20 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
         <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed">{product.description}</p>
       </div>
 
-      {/* Price & Category */}
+      {/* Price, Category & Sizes */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
           <Price amount={(product.price || 0).toString()} currencyCode="INR" className="text-lg sm:text-xl md:text-2xl font-bold text-[#daa520]" />
           <span className="bg-gray-800 text-gray-300 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm w-fit">
             {product.category}
           </span>
+          <div className="flex flex-wrap gap-1">
+            {product.sizes?.map((size, index) => (
+              <span key={index} className="bg-blue-800 text-blue-200 px-2 py-1 rounded-full text-xs sm:text-sm">
+                {size}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -108,7 +113,7 @@ export default function ProductDescription({ product }: ProductDescriptionProps)
       <div className="mb-4 sm:mb-6">
         <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">Select Size</h3>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-          {CLOTHING_SIZES.map((size) => (
+          {product.sizes?.map((size) => (
             <button
               key={size}
               onClick={() => setSelectedSize(size)}

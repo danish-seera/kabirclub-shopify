@@ -10,7 +10,8 @@ const fallbackProducts: Product[] = [
     price: 999.00,
     images: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60'],
     category: 'Topwear',
-    handle: 'classic-white-tshirt',
+    handle: 'classic-white-tshirt-12345',
+    sizes: ['S', 'M', 'L', 'XL'],
     is_active: true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
@@ -22,7 +23,8 @@ const fallbackProducts: Product[] = [
     price: 1999.00,
     images: ['https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&auto=format&fit=crop&q=60'],
     category: 'Bottomwear',
-    handle: 'denim-jeans',
+    handle: 'denim-jeans-67890',
+    sizes: ['M', 'L', 'XL', 'XXL'],
     is_active: true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
@@ -34,7 +36,8 @@ const fallbackProducts: Product[] = [
     price: 1499.00,
     images: ['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=60'],
     category: 'Topwear',
-    handle: 'casual-shirt',
+    handle: 'casual-shirt-54321',
+    sizes: ['S', 'M', 'L'],
     is_active: true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()

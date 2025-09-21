@@ -8,6 +8,7 @@ export interface Product {
   images: string[];
   category: string;
   handle: string;
+  sizes: string[];
   is_active: boolean;
   created_at: string;
   updated_at: string;

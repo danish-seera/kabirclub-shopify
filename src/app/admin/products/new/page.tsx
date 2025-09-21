@@ -19,6 +19,7 @@ export default function NewProductPage() {
     price: '',
     category: '',
     handle: '',
+    sizes: [] as string[],
     images: [] as string[],
     is_active: true
   });
@@ -26,17 +27,19 @@ export default function NewProductPage() {
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const categories = ['Topwear', 'Bottomwear', 'Accessories', 'Footwear'];
+  const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
-    if (name === 'title' && !formData.handle) {
-      // Auto-generate handle from title
+    if (name === 'title') {
+      // Auto-generate handle from title with random number
+      const randomNumber = Math.floor(Math.random() * 90000) + 10000; // 5-digit random number
       const autoHandle = value.toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
         .replace(/\s+/g, '-')
         .replace(/-+/g, '-')
-        .trim();
+        .trim() + '-' + randomNumber;
       
       setFormData(prev => ({
         ...prev,
@@ -70,6 +73,15 @@ export default function NewProductPage() {
     }));
   };
 
+  const handleSizeToggle = (size: string) => {
+    setFormData(prev => ({
+      ...prev,
+      sizes: prev.sizes.includes(size)
+        ? prev.sizes.filter(s => s !== size)
+        : [...prev.sizes, size]
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -79,8 +91,8 @@ export default function NewProductPage() {
       setMessage(null);
 
       // Validation
-      if (!formData.title || !formData.price || !formData.category || !formData.handle) {
-        throw new Error('Please fill in all required fields');
+      if (!formData.title || !formData.price || !formData.category || !formData.handle || formData.sizes.length === 0) {
+        throw new Error('Please fill in all required fields and select at least one size');
       }
 
       const price = parseFloat(formData.price);
@@ -97,6 +109,7 @@ export default function NewProductPage() {
         price: price,
         category: formData.category,
         handle: formData.handle,
+        sizes: formData.sizes,
         images: images,
         is_active: formData.is_active
       };
@@ -204,22 +217,36 @@ export default function NewProductPage() {
 
           <div>
             <label className="block text-white text-sm font-medium mb-2">
-              Handle (URL) *
+              Available Sizes *
             </label>
-            <input
-              type="text"
-              name="handle"
-              value={formData.handle}
-              onChange={handleInputChange}
-              required
-              className="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
-              placeholder="product-url-handle"
-            />
+            <div className="grid grid-cols-5 gap-2">
+              {sizes.map(size => (
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => handleSizeToggle(size)}
+                  className={`px-3 py-2 rounded-lg border-2 transition-all duration-200 text-sm font-medium ${
+                    formData.sizes.includes(size)
+                      ? 'border-blue-500 bg-blue-600 text-white'
+                      : 'border-gray-600 text-gray-300 hover:border-blue-500 hover:text-blue-400'
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
             <p className="text-gray-400 text-xs mt-1">
-              URL-friendly identifier (auto-generated from title)
+              Select all available sizes for this product
             </p>
+            {formData.sizes.length > 0 && (
+              <p className="text-blue-400 text-xs mt-1">
+                Selected: {formData.sizes.join(', ')}
+              </p>
+            )}
           </div>
         </div>
+
+        {/* Handle field is auto-generated and hidden from user */}
 
         <div>
           <label className="block text-white text-sm font-medium mb-2">

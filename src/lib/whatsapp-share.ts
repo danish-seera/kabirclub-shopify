@@ -5,13 +5,10 @@ export const WHATSAPP_PHONE = '917991812899'; // Your WhatsApp business number
 
 export interface WhatsAppShareData {
   product: Product;
-  selectedSize?: string;
-  quantity?: number;
-  customMessage?: string;
 }
 
 export function generateWhatsAppMessage(data: WhatsAppShareData): string {
-  const { product, selectedSize, quantity = 1, customMessage } = data;
+  const { product } = data;
   
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kabirclub.com';
   const productUrl = `${baseUrl}/product/${product.handle}`;
@@ -36,14 +33,3 @@ export function shareOnWhatsApp(data: WhatsAppShareData): void {
   }
 }
 
-export function copyProductLink(product: Product): string {
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kabirclub.com';
-  return `${baseUrl}/product/${product.handle}`;
-}
-
-export function copyToClipboard(text: string): Promise<boolean> {
-  if (typeof window !== 'undefined' && navigator.clipboard) {
-    return navigator.clipboard.writeText(text).then(() => true).catch(() => false);
-  }
-  return Promise.resolve(false);
-}

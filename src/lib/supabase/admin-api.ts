@@ -10,6 +10,7 @@ export async function createProduct(productData: {
   images: string[];
   category: string;
   handle: string;
+  sizes: string[];
   is_active?: boolean;
 }): Promise<Product | null> {
   if (!isSupabaseConfigured()) {
@@ -42,6 +43,7 @@ export async function updateProduct(
     images: string[];
     category: string;
     handle: string;
+    sizes: string[];
     is_active: boolean;
   }>
 ): Promise<Product | null> {
